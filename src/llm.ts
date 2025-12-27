@@ -2,7 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-const MAX_DIFF_CHARS = 8_000;
+const MAX_DIFF_CHARS = 8000;
 
 interface GeminiPart {
   text?: string;
@@ -21,66 +21,54 @@ interface GeminiResponse {
 }
 
 const trimDiff = (diff: string): string => {
-  if (diff.length <= MAX_DIFF_CHARS) {
-    return diff.slice(0, MAX_DIFF_CHARS);
-  }
-  return diff;
+  return diff.length <= MAX_DIFF_CHARS ? diff : diff.slice(0, MAX_DIFF_CHARS);
 };
 
 const buildPrompt = (diff: string): string => {
   return `
-  Generate a dope professional Git commit message.
+Generate a professional Git commit message.
 
-  Rules:
-  - One line only
-  - Imperative mood (e.g. "feat", "fix", "refactor")
-  - Max 72 characters
-  - No emojis pleaes!!!!!!!
-  - No punctuation at the end please!!!!
+Rules:
+- One line only
+- Imperative mood (e.g. "feat", "fix", "refactor")
+- Max 72 characters
+- No emojis
+- No punctuation at the end
 
-  Changes:
-  ${diff}
-  `.trim();
+Changes:
+${diff}
+`.trim();
 };
 
 export const generateCommitMessage = async (
   rawDiff: string,
 ): Promise<string> => {
   const API_URL =
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview";
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent";
   const API_KEY = process.env.GEMINI_API_KEY;
 
-  if (!API_URL || !API_KEY) {
-    throw new Error("Gemini API credentials missing");
-  }
+  if (!API_KEY) throw new Error("Gemini API key missing");
 
   const diff = trimDiff(rawDiff);
   const prompt = buildPrompt(diff);
 
   try {
     const response = await axios.post<GeminiResponse>(
-      `${API_URL}?key=${API_KEY}`,
+      API_URL,
       {
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
-        generationConfig: {
-          maxOutputTokens: 64,
-          temperature: 0.2,
-        },
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 64, temperature: 0.2 },
       },
       {
         headers: {
           "Content-Type": "application/json",
+          "x-goog-api-key": API_KEY,
         },
       },
     );
 
     const message =
       response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-
     return message && message.length > 0 ? message : "chore: update changes";
   } catch (error) {
     console.error("LLM request failed:", error);
