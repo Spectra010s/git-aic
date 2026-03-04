@@ -1,7 +1,7 @@
 # AI Git Commit TS 🤖
 
 ## Overview
-A sophisticated CLI utility built with TypeScript that automates the generation of standardized Git commit messages. By analyzing staged code changes and leveraging Google's Gemini 2.5 Flash model, it ensures every commit follows the Conventional Commits specification without manual effort.
+An open-source sophisticated CLI utility built with TypeScript that automates the generation of standardized Git commit messages. By analyzing staged code changes and leveraging Google's Gemini 2.5 Flash model, it ensures every commit follows the Conventional Commits specification without manual effort.
 
 ## Features
 - **Smart Diff Analysis**: Automatically detects staged changes and can auto-stage files if nothing is currently in the index.

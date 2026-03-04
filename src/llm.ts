@@ -1,99 +1,75 @@
-import axios from "axios";
-import "dotenv/config";
-
-interface GeminiPart {
-  text?: string;
-}
-
-interface GeminiContent {
-  parts?: GeminiPart[];
-}
-
-interface GeminiCandidate {
-  content?: GeminiContent;
-}
-
-interface GeminiResponse {
-  candidates: GeminiCandidate[];
-}
-
-const buildPrompt = (diff: string): string =>
-  `
-CRITICAL INSTRUCTIONS - READ CAREFULLY:
-You are an expert Git commit message writer. You MUST follow ALL these rules:
-
-1. FORMAT: Use Conventional Commits format: <type>(<scope>): <description>
-   - type: MUST be one of: feat, fix, refactor, chore, docs, style, test, perf
-   - scope: Should be the module/file affected (e.g., "auth", "api", "ui", "config")
-   - description: Clear, imperative description in present tense
-
-2. DESCRIPTION REQUIREMENTS:
-   - Start with an imperative verb (add, fix, remove, update, refactor, etc.)
-   - Be specific about what changed
-   - Keep it under 72 characters total (including type and scope)
-   - NO trailing punctuation
-   - NO emojis ever
-   - MUST be a complete sentence
-
-3. MESSAGE STRUCTURE:
-   - The entire commit message must be exactly one line
-   - Format: type(scope): description
-   - Example: "feat(auth): add password reset functionality"
-   - Example: "fix(api): handle null response in user endpoint"
-   - Example: "refactor(ui): simplify component state management"
-
-4. QUALITY CHECKS - YOUR OUTPUT MUST PASS:
-   - Contains opening and closing parentheses
-   - Has a colon after the parentheses
-   - Description exists and is not empty
-   - Total length ≤ 72 characters
-   - No markdown formatting
-   - No code blocks
-   - No explanations or notes
-
-5. FAILURE MODE:
-   - If you cannot generate a proper message, return exactly: "chore: update code"
-
-YOUR TASK:
-Analyze this git diff and generate exactly ONE proper commit message following all rules above.
-
-Git diff:
-${diff}
-
-Commit message:
-`.trim();
-
-export const generateCommitMessage = async (
-  rawDiff: string,
-): Promise<string> => {
-  const API_URL =
-    "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
-  const API_KEY = process.env.GEMINI_API_KEY;
-
-  if (!API_KEY) throw new Error("Gemini API key missing");
-
-  const prompt = buildPrompt(rawDiff);
-
-  try {
-    const response = await axios.post<GeminiResponse>(
-      API_URL,
-      {
-        contents: [{ parts: [{ text: prompt }] }],
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": API_KEY,
-        },
-      },
-    );
-
-    return (
-      response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
-      "chore: update code"
-    );
-  } catch (error) {
-    console.error("LLM request failed:", error);
-    return "chore: update code";
+  import axios from "axios";
+  import chalk from "chalk";
+  import { buildPrompt } from "./prompt";
+  
+  interface GeminiPart {
+    text?: string;
   }
-};
+  
+  interface GeminiContent {
+    parts?: GeminiPart[];
+  }
+  
+  interface GeminiCandidate {
+    content?: GeminiContent;
+  }
+  
+  interface GeminiResponse {
+    candidates: GeminiCandidate[];
+  }
+  
+  export const generateCommitMessage = async (
+    rawDiff: string,
+  ): Promise<string> => {
+    const API_URL =
+      "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
+    const API_KEY: string = process.env.GEMINI_COMMIT_MESSAGE_API_KEY!;
+  
+    if (!API_KEY) {
+      console.error(
+        chalk.red(
+          "\nMissing GEMINI_COMMIT_MESSAGE_API_KEY environment variable.\n",
+        ),
+      );
+  
+      console.log("Please set your API key before running this command.\n");
+  
+      console.log(chalk.yellow("How to fix this:\n"));
+  
+      console.log(chalk.cyan("macOS / Linux:"));
+      console.log("  export GEMINI_COMMIT_MESSAGE_API_KEY=your_api_key_here\n");
+  
+      console.log(chalk.cyan("Windows (PowerShell):"));
+      console.log('  setx GEMINI_COMMIT_MESSAGE_API_KEY "your_api_key_here"\n');
+  
+      console.log(
+        chalk.gray("After setting the variable, restart your terminal.\n"),
+      );
+  
+      process.exit(1);
+    }
+    const prompt = buildPrompt(rawDiff);
+  
+    try {
+      const response = await axios.post<GeminiResponse>(
+        API_URL,
+        {
+          contents: [{ parts: [{ text: prompt }] }],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": API_KEY,
+          },
+        },
+      );
+  
+      return (
+        response.data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ||
+        "chore: update code"
+      );
+    } catch (error) {
+      console.error("LLM request failed:", error);
+      return "chore: update code";
+    }
+  };

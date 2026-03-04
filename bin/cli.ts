@@ -1,10 +1,10 @@
 #!/usr/bin/env ts-node
 import { Command } from "commander";
-import simpleGit, { type SimpleGit } from "simple-git";
+import { simpleGit } from "simple-git";
+import type { SimpleGit } from "simple-git";
 import chalk from "chalk";
 import { getGitDiff } from "../src/git";
 import { generateCommitMessage } from "../src/llm";
-import "dotenv/config";
 
 const git: SimpleGit = simpleGit();
 const program = new Command();
