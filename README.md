@@ -1,79 +1,211 @@
-# AI Git Commit TS 🤖
+# Automated AI Commit Assistant
 
-## Overview
-An open-source sophisticated CLI utility built with TypeScript that automates the generation of standardized Git commit messages. By analyzing staged code changes and leveraging Google's Gemini 2.5 Flash model, it ensures every commit follows the Conventional Commits specification without manual effort.
+The AI Commit Assistant is a command-line interface (CLI) tool built in TypeScript that upgrades your Git workflow by automatically generating high-quality, conventional commit messages.
+
+Powered by a Large Language Model (LLM), it analyzes your staged code changes and produces concise, descriptive, and standard-compliant commit messages, helping you maintain a clean and consistent Git history.
+
+Unlike editor-integrated AI tools, this solution is fully self-hosted and runs only when you execute it. It is not always running in the background. It operates entirely on your terms.
+
+You define the rules.  
+You customize the system prompt.  
+You decide when it runs.  
+
+Your workflow. Your control.
+
+---
 
 ## Features
-- **Smart Diff Analysis**: Automatically detects staged changes and can auto-stage files if nothing is currently in the index.
-- **LLM-Powered Context**: Uses advanced AI to understand the logic of your changes, not just file names.
-- **Conventional Commits Compliance**: Strictly enforces formats like `feat(scope): description` or `fix(ui): handle null state`.
-- **Type-Safe Architecture**: Built entirely in TypeScript for maximum reliability and maintainability.
-- **Efficient Prompt Engineering**: Optimized system instructions to ensure messages are concise (under 72 characters) and imperative.
+
+- **AI-Powered Message Generation**  
+  Uses Google Gemini API to generate commit messages from your Git diff.
+
+- **Self-Hosted & On-Demand**  
+  Runs locally in your terminal. No background processes. No editor lock-in.
+
+- **Full Control Over Rules**  
+  Modify the system prompt to enforce your own commit conventions and formatting style.
+
+- **Conventional Commits Compliance**  
+  Strictly follows formats like `feat:`, `fix:`, `refactor:`, `chore:`.
+
+- **Automatic Staging**  
+  If no files are staged, it automatically stages all changes before generating a message.
+
+- **TypeScript & Type Safety**  
+  Built with TypeScript for maintainability and reliability.
+
+- **Seamless Git Integration**  
+  Designed to integrate directly with Git using a global alias.
+
+---
+
+## Why Not Just Use Copilot?
+
+Many AI commit tools:
+
+- Depend on editor integrations  
+- Limit customization  
+- Enforce their defaults  
+- Restrict usage  
+- Run continuously in the background  
+
+This tool is different.
+
+It runs only when you call it.  
+It follows your prompt rules.  
+It generates commits exactly how you define them.  
+It stays out of your way.
+
+There are no forced conventions.  
+No hidden behavior.  
+No unnecessary background processes.  
+
+If needed, you can rotate API keys later. You stay in control.
+
+This is controlled automation — not passive AI assistance.
+
+---
 
 ## Installation
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/samueltuoyo15/Commit-Message-Tool.git
-cd my-ai-git-commit-ts
+cd Commit-Message-Tool
 ```
 
 ### 2. Install Dependencies
-Ensure you have Node.js installed on your machine.
+
 ```bash
 npm install
 ```
 
-### 3. Environment Setup
-Create a `.env` file in the root directory and add your Google Gemini API key:
-```env
-GEMINI_API_KEY=your_api_key_here
+---
+
+## Environment Variables
+
+This tool requires a Google Gemini API key.
+
+Environment variable:
+
+```
+GEMINI_COMMIT_MESSAGE_API_KEY
 ```
 
-## Usage
-
-To generate a commit message based on your current changes, run the following command:
+### macOS / Linux
 
 ```bash
-npm run commit
+export GEMINI_COMMIT_MESSAGE_API_KEY=your_api_key_here
 ```
 
-### How it works:
-1. The tool checks for staged changes using `simple-git`.
-2. If no files are staged, it offers to stage all changes for you automatically.
-3. It sends the `git diff` output to the Gemini API with a strict set of formatting rules.
-4. The AI returns a professional, one-line commit message ready for use.
+### Windows (PowerShell)
+
+```powershell
+setx GEMINI_COMMIT_MESSAGE_API_KEY "your_api_key_here"
+```
+
+After setting the variable, restart your terminal.
+
+This project intentionally avoids `.env` files to reduce the risk of accidentally committing sensitive credentials.
+
+---
+
+## Global Git Alias Setup (Recommended)
+
+To run this tool from any Git repository, configure a global Git alias.
+
+Replace the path below with your actual project path:
+
+```bash
+git config --global alias.aic '!npx ts-node "C:/path-to-your-project/bin/cli.ts"'
+```
+
+Now, from any Git repository, simply run:
+
+```bash
+git aic
+```
+
+That’s it.
+
+No need to manually write commit messages anymore.
+
+---
+
+## How It Works
+
+1. Captures your staged Git diff  
+2. Builds a strict system prompt  
+3. Sends the diff to Gemini  
+4. Enforces Conventional Commit formatting  
+5. Executes `git commit` automatically  
+
+You can modify commit behavior by editing:
+
+```
+src/prompt.ts
+```
+
+That file is your control layer.
+
+---
 
 ## Technologies Used
 
 | Technology | Purpose |
-| :--- | :--- |
-| [TypeScript](https://www.typescriptlang.org/) | Core language for type-safe logic |
-| [Node.js](https://nodejs.org/) | JavaScript runtime environment |
-| [Simple-Git](https://www.npmjs.com/package/simple-git) | Interface for executing Git commands |
-| [Google Gemini API](https://ai.google.dev/) | Generative AI for analyzing code context |
-| [Axios](https://axios-http.com/) | Handling HTTP requests to the LLM endpoint |
+|------------|----------|
+| TypeScript | Core language |
+| Node.js | Runtime |
+| Axios | HTTP client |
+| Chalk | Styled terminal output |
+| Commander.js | CLI framework |
+| Simple-Git | Git integration |
+| Google Gemini API | LLM text generation |
 
-## Contributing
-
-I welcome contributions to make this tool even more robust! 🤝
-
-- **Step 1**: Fork the repository.
-- **Step 2**: Create a feature branch (`git checkout -b feature/AmazingFeature`).
-- **Step 3**: Commit your changes following the conventional commit style.
-- **Step 4**: Push to the branch and open a Pull Request.
-
-## License
-This project is licensed under the **ISC License**.
-
-## Author Info
-**Samuel Tuoyo**
-- [Twitter](https://x.com/TuoyoS26091)
-- [LinkedIn](https://www.linkedin.com/in/samuel-tuoyo-8568b62b6)
 ---
 
-![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
-![License](https://img.shields.io/badge/license-ISC-green)
+## Final Takeaway
 
-[![Readme was generated by Dokugen](https://img.shields.io/badge/Readme%20was%20generated%20by-Dokugen-brightgreen)](https://www.npmjs.com/package/dokugen)
+Automating repetitive tasks like commit messages saves time — but the real win here is ownership.
+
+This tool is:
+
+- Self-hosted  
+- On-demand  
+- Fully customizable  
+- Under your control  
+
+It runs when you need it.  
+It follows your rules.  
+It generates commits the way you want them written.  
+
+You choose the model.  
+You define the prompt.  
+You control the format.  
+You can extend or optimize it anytime.  
+
+Instead of adapting to someone else's defaults, you built a system tailored to your workflow.
+
+You are not just using AI tools.  
+You are building them to fit your system.
+
+---
+
+## License
+
+ISC License
+
+---
+
+## Author
+
+Samuel Tuoyo
+- [Twitter](https://x.com/TuoyoS26091)
+- [LinkedIn](https://www.linkedin.com/in/samuel-tuoyo-8568b62b6)
+
+---
+
+![License](https://img.shields.io/badge/License-ISC-blue.svg)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue?style=flat&logo=typescript&logoColor=white)
+![Node.js](https://img.shields.io/badge/Runtime-Node.js-green?style=flat&logo=nodedotjs&logoColor=white)
