@@ -1,0 +1,43 @@
+{
+  "name": "git-aic",
+  "version": "1.0.0",
+  "description": "AI-powered Git commit generator using Google Gemini",
+  "homepage": "https://github.com/samueltuoyo15/Commit-Message-Tool/tree/#readme",
+  "bugs": {
+    "url": "https://github.com/samueltuoyo15/Commit-Message-Tool/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samueltuoyo15/Commit-Message-Tool.git"
+  },
+  "license": "ISC",
+  "author": "Spectra010s",
+  "type": "module",
+  "main": "./dist/cli.js",
+  "bin": {
+    "git-aic": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "commit message tool",
+  "git",
+  "git-plugin",
+  "git-aic",
+  "automated-commits",
+  "ai-commits",
+  "gemini"
+  ],
+  "dependencies": {
+    "axios": "^1.13.2",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2",
+    "simple-git": "^3.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3"
+  }
+}
