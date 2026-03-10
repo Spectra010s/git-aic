@@ -8,7 +8,9 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "rootDir": "./src",
     "outDir": "./dist", // compiled JS output
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
