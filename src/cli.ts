@@ -6,15 +6,43 @@ import type { SimpleGit } from "simple-git";
 import chalk from "chalk";
 import { getGitDiff } from "./git.js";
 import { generateCommitMessage } from "./llm.js";
+import { getConfig, setApiKey } from "./config.js";
 
 const git: SimpleGit = simpleGit();
 const program = new Command();
 
 program
-  .name("git-aic")
+  .name("git aic")
   .description("AI-powered Git commit generator using Google Gemini")
   .version("1.0.0")
   .option("-p, --push", "push after committing");
+
+program
+  .command("config")
+  .description("Configure the Gemini API Key settings")
+  .option("-k, --key <key>", "Set your Gemini API Key")
+  .option("--show", "Show the full API key")
+  .action(async (options) => {
+    const cfg = await getConfig();
+    if (options.key) {
+      await setApiKey(options.key);
+      console.log(chalk.green("API Key saved successfully!"));
+      return;
+    }
+    if (cfg.apiKey) {
+      if (options.show) {
+        console.log(chalk.green("Current API Key:"), cfg.apiKey);
+      } else {
+        const styled =
+          cfg.apiKey.slice(0, 4) +
+          chalk.dim("*".repeat(cfg.apiKey.length - 8)) +
+          cfg.apiKey.slice(-4);
+        console.log(chalk.green("Current API Key:"), styled);
+      }
+    } else {
+      console.log(chalk.yellow("No API key set"));
+    }
+  });
 
 program.action(async (options) => {
   try {
