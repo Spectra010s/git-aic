@@ -1,6 +1,6 @@
   import axios from "axios";
   import chalk from "chalk";
-  import { buildPrompt } from "./prompt";
+  import { buildPrompt } from "./prompt.js";
   
   interface GeminiPart {
     text?: string;
