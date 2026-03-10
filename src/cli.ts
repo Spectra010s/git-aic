@@ -11,7 +11,7 @@ const git: SimpleGit = simpleGit();
 const program = new Command();
 
 program
-  .name("commit")
+  .name("git-aic")
   .description("AI-powered Git commit generator using Google Gemini")
   .version("1.0.0")
   .option("-p, --push", "push after committing");
