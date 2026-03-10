@@ -6,7 +6,7 @@ import type { SimpleGit } from "simple-git";
 import chalk from "chalk";
 import { getGitDiff } from "./git.js";
 import { generateCommitMessage } from "./llm.js";
-import { getUserConfirmation } from "./confirm.js"
+import { getUserConfirmation } from "./confirm.js";
 import { getConfig, setApiKey } from "./config.js";
 
 const git: SimpleGit = simpleGit();
@@ -16,7 +16,8 @@ program
   .name("git aic")
   .description("AI-powered Git commit generator using Google Gemini")
   .version("1.0.0")
-  .option("-p, --push", "push after committing");
+  .option("-p, --push", "push after committing")
+  .option("-i, --issue <number>", "Link commit to GitHub issue");
 
 program
   .command("config")
@@ -58,20 +59,25 @@ program.action(async (options) => {
     status.staged.forEach((file) => console.log(chalk.cyan(`- ${file}`)));
     console.log("");
 
-    let currentMessage = "";
+    let currentMsg = "";
     let confirmed = false;
+    let finalMsg = "";
+
+    const issueSuffix = options.issue ? `, closes #${options.issue}` : "";
 
     console.log(chalk.blue("Analyzing staged changes...\n"));
-    
-    while (!confirmed) {
-      currentMessage = await generateCommitMessage(diff);
-     
-      const { choice, message } = await getUserConfirmation(currentMessage);
 
-      if (choice === 'y') {
-        currentMessage = message;
+    while (!confirmed) {
+      let currentMsg = await generateCommitMessage(diff);
+
+      currentMsg = `${currentMsg}${issueSuffix}`;
+
+      const { choice, message } = await getUserConfirmation(currentMsg);
+
+      if (choice === "y") {
+        finalMsg = message;
         confirmed = true;
-      } else if (choice === 'r') {
+      } else if (choice === "r") {
         console.log(chalk.yellow("Regenerating...\n"));
         continue;
       } else {
@@ -79,9 +85,9 @@ program.action(async (options) => {
         process.exit(0);
       }
     }
-    
-    console.log(chalk.blue(`> ran: git commit -m "${currentMessage}"`));
-    await git.commit(currentMessage);
+
+    console.log(chalk.blue(`> ran: git commit -m "${finalMsg}"`));
+    await git.commit(finalMsg);
     console.log(chalk.green("\nCommit successful"));
 
     if (options.push) {
