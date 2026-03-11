@@ -1,18 +1,14 @@
-# Automated AI Commit Assistant
+# Git Aic
 
-The AI Commit Assistant is a command-line interface (CLI) tool built in TypeScript that upgrades your Git workflow by automatically generating high-quality, conventional commit messages.
+**git-aic** is a command-line interface (CLI) tool built in TypeScript that upgrades your Git workflow by automatically generating high-quality, conventional commit messages.
 
-Powered by a Large Language Model (LLM), it analyzes your staged code changes and produces concise, descriptive, and standard-compliant commit messages, helping you maintain a clean and consistent Git history.
-
-Unlike editor-integrated AI tools, this solution is fully self-hosted and runs only when you execute it. It is not always running in the background. It operates entirely on your terms.
+Powered by Google Gemini, it analyzes your staged code changes and produces concise, descriptive, and standard-compliant commit messages, helping you maintain a clean and consistent Git history.
 
 You define the rules.  
 You customize the system prompt.  
 You decide when it runs.
 
 Your workflow. Your control.
-
----
 
 ## Features
 
@@ -28,16 +24,29 @@ Your workflow. Your control.
 - **Conventional Commits Compliance**  
   Strictly follows formats like `feat:`, `fix:`, `refactor:`, `chore:`.
 
-- **Automatic Staging**  
-  If no files are staged, it automatically stages all changes before generating a message.
+- **Commit Confirmation & Editing**  
+  Before committing, you can:
+  - Accept the suggested commit message
+  - Edit the message
+  - Reject it
+  - Retry generation
+
+- **Issue Linking**  
+  Attach commits to GitHub issues with `--issue <number>`.
+
+- **Optional Push After Commit**  
+  Use `-p` or `--push` to push after committing.
+
+- **Config Management**  
+  Set your Gemini API key or view your config:
+  - `git aic config --key <key>`
+  - `git aic config`
 
 - **TypeScript & Type Safety**  
   Built with TypeScript for maintainability and reliability.
 
 - **Seamless Git Integration**  
-  Designed to integrate directly with Git using a global alias.
-
----
+  Directly integrates with Git using a CLI.
 
 ## Why Not Just Use Copilot?
 
@@ -64,15 +73,25 @@ If needed, you can rotate API keys later. You stay in control.
 
 This is controlled automation — not passive AI assistance.
 
----
+## User Installation
 
-## Installation
+To install `git-aic` globally via npm:
+
+```bash
+npm i -g git-aic
+```
+
+```bash
+git aic --help
+```
+
+## Developer Installation (For Contributors)
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/samueltuoyo15/Commit-Message-Tool.git
-cd Commit-Message-Tool
+git clone https://github.com/Spectra010s/git-aic.git
+cd git-aic
 ```
 
 ### 2. Install Dependencies
@@ -81,25 +100,47 @@ cd Commit-Message-Tool
 npm install
 ```
 
----
+### 3. Build the Project
 
-## Environment Variables
-
-This tool requires a Google Gemini API key.
-
-Environment variable:
-
-```
-GEMINI_COMMIT_MESSAGE_API_KEY
+```bash
+npm run build
 ```
 
-### macOS / Linux
+## Configuration
+
+### Set API Key (Primary)
+
+Use the CLI config command to save your Google Gemini API key:
+
+```bash
+git aic config --key <your_api_key>
+```
+
+To view your current config:
+
+```bash
+git aic config
+```
+
+> "\*Note:\*\* it's masked by default for security reasons
+
+To view the whole current config api key
+
+```bash
+git aic config --show
+```
+
+### Environment Variable (Fallback)
+
+If you prefer not to use the config system, you can set it manually in your environment:
+
+- **macOS / Linux:**
 
 ```bash
 export GEMINI_COMMIT_MESSAGE_API_KEY=your_api_key_here
 ```
 
-### Windows (PowerShell)
+- **Windows (PowerShell):**
 
 ```powershell
 setx GEMINI_COMMIT_MESSAGE_API_KEY "your_api_key_here"
@@ -107,31 +148,52 @@ setx GEMINI_COMMIT_MESSAGE_API_KEY "your_api_key_here"
 
 After setting the variable, restart your terminal.
 
-This project intentionally avoids `.env` files to reduce the risk of accidentally committing sensitive credentials.
+> **Note:** This method works, but using the CLI config is safer and easier for long-term usage.
 
----
+## Usage
 
-## Global Git Alias Setup (Recommended)
-
-To run this tool from any Git repository, configure a global Git alias.
-
-Replace the path below with your actual project path:
-
-```bash
-git config --global alias.aic '!npx ts-node "C:/path-to-your-project/bin/cli.ts"'
-```
-
-Now, from any Git repository, simply run:
+### Commit With AI Assistance
 
 ```bash
 git aic
 ```
 
+- Prompts you with a generated commit message.
+- You can **accept, edit, reject, or retry** the message.
+
+### Commit and Link to Issue
+
+```bash
+git aic --issue 123
+```
+
+- Attaches the commit to GitHub issue #123.
+
+### Commit and Push
+
+```bash
+git aic -p
+```
+
+- Pushes automatically after committing.
+
+### Configure API Key
+
+```bash
+git aic config --key <key>
+```
+
+- Saves your Google Gemini API key.
+
+```bash
+git aic config
+```
+
+- Displays your saved config.
+
 That’s it.
 
 No need to manually write commit messages anymore.
-
----
 
 ## How It Works
 
@@ -139,15 +201,15 @@ No need to manually write commit messages anymore.
 2. Builds a strict system prompt
 3. Sends the diff to Gemini
 4. Enforces Conventional Commit formatting
-5. Executes `git commit` automatically
+5. Prompts for commit confirmation (accept, edit, retry, reject)
+6. Executes `git commit` automatically
+7. Optionally pushes if `-p` flag is used
 
 You can modify commit behavior by editing:
 
 ```
 src/prompt.ts
 ```
-
-That file is your control layer.
 
 ---
 
@@ -163,47 +225,42 @@ That file is your control layer.
 | Simple-Git        | Git integration        |
 | Google Gemini API | LLM text generation    |
 
----
-
 ## Final Takeaway
 
-Automating repetitive tasks like commit messages saves time — but the real win here is ownership.
+Automating repetitive tasks like **commit messages** saves time — but the real win here is ownership.
 
-This tool is:
+git-aic:
 
-- Self-hosted
-- On-demand
-- Fully customizable
-- Under your control
+- **Self-hosted** — runs entirely on your machine
+- **On-demand** — only runs when you call it
+- **Fully customizable** — prompts, commit format, workflow
+- **Under your control** — you decide every step
 
-It runs when you need it.  
-It follows your rules.  
-It generates commits the way you want them written.
+It runs when you need it, follows your rules, and generates commits the way **you** want.
 
-You choose the model.  
-You define the prompt.  
-You control the format.  
-You can extend or optimize it anytime.
+_Choose your model. Define your prompt. Control the format. Extend or optimize anytime._
 
-Instead of adapting to someone else's defaults, you built a system tailored to your workflow.
+Instead of adapting to someone else's defaults, _you built a system tailored to your workflow._
 
 You are not just using AI tools.  
-You are building them to fit your system.
-
----
+You are **building them to fit your process.**
 
 ## License
 
-ISC License
-
----
+[**ISC License**](https://github.com/Spectra010s/git-aic/main/#license)
 
 ## Author
 
-Samuel Tuoyo
+Spectra010s
 
-- [Twitter](https://x.com/TuoyoS26091)
-- [LinkedIn](https://www.linkedin.com/in/samuel-tuoyo-8568b62b6)
+- [Twitter](https://x.com/Spectra010s)
+- [LinkedIn](https://www.linkedin.com/in/adeloye-adetayo-273723253)
+
+## Parent Repository
+
+This project is a fork and standalone version of:
+
+[https://github.com/samueltuoyo15/Commit-Message-Tool](https://github.com/samueltuoyo15/Commit-Message-Tool)
 
 ---
 
