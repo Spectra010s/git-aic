@@ -9,6 +9,10 @@ import { generateCommitMessage } from "./llm.js";
 import { getUserConfirmation } from "./confirm.js";
 import { getConfig, setApiKey } from "./config.js";
 
+process.on("SIGINT", () => {
+  process.exit(0);
+});
+
 const git: SimpleGit = simpleGit();
 const program = new Command();
 
@@ -95,9 +99,17 @@ program.action(async (options) => {
       await git.push();
       console.log(chalk.green("Push successful"));
     }
-  } catch (error) {
-    console.error(chalk.red("\nCommit failed:"), error);
-    process.exit(1);
+  } catch (error: unknown) {
+    let isAbort = false;
+
+    if (typeof error === "object" && error !== null && "code" in error) {
+      const e = error as { code?: string };
+      isAbort = e.code === "ABORT_ERR";
+    }
+
+    const msg = isAbort ? "Operation cancelled" : error;
+    console.error(chalk.red("\n\nCommit failed:"), msg);
+    process.exit(isAbort ? 0 : 1);
   }
 });
 
