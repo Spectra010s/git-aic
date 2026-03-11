@@ -8,7 +8,7 @@ Unlike editor-integrated AI tools, this solution is fully self-hosted and runs o
 
 You define the rules.  
 You customize the system prompt.  
-You decide when it runs.  
+You decide when it runs.
 
 Your workflow. Your control.
 
@@ -43,11 +43,11 @@ Your workflow. Your control.
 
 Many AI commit tools:
 
-- Depend on editor integrations  
-- Limit customization  
-- Enforce their defaults  
-- Restrict usage  
-- Run continuously in the background  
+- Depend on editor integrations
+- Limit customization
+- Enforce their defaults
+- Restrict usage
+- Run continuously in the background
 
 This tool is different.
 
@@ -58,7 +58,7 @@ It stays out of your way.
 
 There are no forced conventions.  
 No hidden behavior.  
-No unnecessary background processes.  
+No unnecessary background processes.
 
 If needed, you can rotate API keys later. You stay in control.
 
@@ -135,11 +135,11 @@ No need to manually write commit messages anymore.
 
 ## How It Works
 
-1. Captures your staged Git diff  
-2. Builds a strict system prompt  
-3. Sends the diff to Gemini  
-4. Enforces Conventional Commit formatting  
-5. Executes `git commit` automatically  
+1. Captures your staged Git diff
+2. Builds a strict system prompt
+3. Sends the diff to Gemini
+4. Enforces Conventional Commit formatting
+5. Executes `git commit` automatically
 
 You can modify commit behavior by editing:
 
@@ -153,15 +153,15 @@ That file is your control layer.
 
 ## Technologies Used
 
-| Technology | Purpose |
-|------------|----------|
-| TypeScript | Core language |
-| Node.js | Runtime |
-| Axios | HTTP client |
-| Chalk | Styled terminal output |
-| Commander.js | CLI framework |
-| Simple-Git | Git integration |
-| Google Gemini API | LLM text generation |
+| Technology        | Purpose                |
+| ----------------- | ---------------------- |
+| TypeScript        | Core language          |
+| Node.js           | Runtime                |
+| Axios             | HTTP client            |
+| Chalk             | Styled terminal output |
+| Commander.js      | CLI framework          |
+| Simple-Git        | Git integration        |
+| Google Gemini API | LLM text generation    |
 
 ---
 
@@ -171,19 +171,19 @@ Automating repetitive tasks like commit messages saves time — but the real win
 
 This tool is:
 
-- Self-hosted  
-- On-demand  
-- Fully customizable  
-- Under your control  
+- Self-hosted
+- On-demand
+- Fully customizable
+- Under your control
 
 It runs when you need it.  
 It follows your rules.  
-It generates commits the way you want them written.  
+It generates commits the way you want them written.
 
 You choose the model.  
 You define the prompt.  
 You control the format.  
-You can extend or optimize it anytime.  
+You can extend or optimize it anytime.
 
 Instead of adapting to someone else's defaults, you built a system tailored to your workflow.
 
@@ -201,6 +201,7 @@ ISC License
 ## Author
 
 Samuel Tuoyo
+
 - [Twitter](https://x.com/TuoyoS26091)
 - [LinkedIn](https://www.linkedin.com/in/samuel-tuoyo-8568b62b6)
 
