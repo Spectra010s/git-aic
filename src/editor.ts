@@ -86,15 +86,23 @@ export function openInEditor(filePath: string) {
   }
 }
 
-export async function editPromptInEditor(initialPrompt: string): Promise<string> {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "git-aic-prompt-"));
-  const tempFile = path.join(tempDir, "prompt.txt");
+export async function editTextInEditor(
+  initialText: string,
+  prefix = "git-aic-",
+  fileName = "message.txt",
+): Promise<string> {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
+  const tempFile = path.join(tempDir, fileName);
 
   try {
-    await fs.writeFile(tempFile, `${initialPrompt}\n`, "utf-8");
+    await fs.writeFile(tempFile, `${initialText}\n`, "utf-8");
     openInEditor(tempFile);
     return (await fs.readFile(tempFile, "utf-8")).trim();
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
+}
+
+export async function editPromptInEditor(initialPrompt: string): Promise<string> {
+  return editTextInEditor(initialPrompt, "git-aic-prompt-", "prompt.txt");
 }
