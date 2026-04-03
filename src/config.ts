@@ -3,6 +3,11 @@ import path from "path";
 import os from "os";
 import chalk from "chalk";
 
+export interface Config {
+  apiKey?: string;
+  customPrompt?: string;
+}
+
 function getConfigPath() {
   const toolName = "git-aic";
 
@@ -16,12 +21,12 @@ function getConfigPath() {
   }
 }
 
-export async function getConfig(): Promise<Record<string, any>> {
+export async function getConfig(): Promise<Config> {
   const configPath = getConfigPath();
 
   try {
     const content = await fs.readFile(configPath, "utf-8");
-    return JSON.parse(content);
+    return JSON.parse(content) as Config;
   } catch (err: any) {
     if (err.code === "ENOENT") return {};
     console.error(chalk.red("Failed to read config:"), err.message);
@@ -29,18 +34,32 @@ export async function getConfig(): Promise<Record<string, any>> {
   }
 }
 
-export async function saveConfig(data: Record<string, any>) {
+export async function saveConfig(data: Partial<Config>) {
   const configPath = getConfigPath();
   const dir = path.dirname(configPath);
 
   await fs.mkdir(dir, { recursive: true });
 
   const current = await getConfig();
-  const newConfig = { ...current, ...data };
+  const newConfig: Config = { ...current, ...data };
 
   await fs.writeFile(configPath, JSON.stringify(newConfig, null, 2), "utf-8");
 }
 
 export async function setApiKey(key: string) {
   await saveConfig({ apiKey: key });
+}
+
+export async function setCustomPrompt(prompt: string) {
+  await saveConfig({ customPrompt: prompt });
+}
+
+export async function resetCustomPrompt() {
+  const { customPrompt, ...rest } = await getConfig();
+  void customPrompt;
+  const configPath = getConfigPath();
+  const dir = path.dirname(configPath);
+
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(configPath, JSON.stringify(rest, null, 2), "utf-8");
 }

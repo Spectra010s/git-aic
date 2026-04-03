@@ -7,7 +7,14 @@ import chalk from "chalk";
 import { getGitDiff } from "./git.js";
 import { generateCommitMessage } from "./llm.js";
 import { getUserConfirmation } from "./confirm.js";
-import { getConfig, setApiKey } from "./config.js";
+import { editPromptInEditor } from "./editor.js";
+import {
+  getConfig,
+  resetCustomPrompt,
+  setApiKey,
+  setCustomPrompt,
+} from "./config.js";
+import { DEFAULT_SYSTEM_PROMPT } from "./prompt.js";
 
 process.on("SIGINT", () => {
   process.exit(0);
@@ -48,6 +55,41 @@ program
     } else {
       console.log(chalk.yellow("No API key set"));
     }
+  });
+
+const promptCommand = program
+  .command("prompt")
+  .description("Manage the system prompt used for commit generation");
+
+promptCommand
+  .command("edit")
+  .description("Edit and save a custom system prompt in your editor")
+  .action(async () => {
+    try {
+      const cfg = await getConfig();
+      const editedPrompt = await editPromptInEditor(
+        cfg.customPrompt || DEFAULT_SYSTEM_PROMPT,
+      );
+
+      if (!editedPrompt) {
+        console.log(chalk.red("Prompt was empty. Nothing saved."));
+        process.exit(1);
+      }
+
+      await setCustomPrompt(editedPrompt);
+      console.log(chalk.green("Custom system prompt saved successfully!"));
+    } catch (error) {
+      console.error(chalk.red("Prompt edit failed:"), error);
+      process.exit(1);
+    }
+  });
+
+promptCommand
+  .command("reset")
+  .description("Reset the system prompt back to the default")
+  .action(async () => {
+    await resetCustomPrompt();
+    console.log(chalk.green("System prompt reset to default."));
   });
 
 program.action(async (options) => {

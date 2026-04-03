@@ -1,5 +1,4 @@
-export const buildPrompt = (diff: string): string =>
-  `
+export const DEFAULT_SYSTEM_PROMPT = `
 CRITICAL INSTRUCTIONS - READ CAREFULLY:
 You are an expert Git commit message writer. You MUST follow ALL these rules:
 
@@ -39,7 +38,10 @@ YOUR TASK:
 Analyze this git diff and generate exactly ONE proper commit message following all rules above.
 
 Git diff:
-${diff}
+{{diff}}
 
 Commit message:
 `.trim();
+
+export const buildPrompt = (diff: string, systemPrompt = DEFAULT_SYSTEM_PROMPT): string =>
+  systemPrompt.replace("{{diff}}", diff);
