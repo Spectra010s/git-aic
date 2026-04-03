@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import os from "os";
 import chalk from "chalk";
+import { getLocalPrompt } from "./git.js";
 
 export interface Config {
   apiKey?: string;
@@ -62,4 +63,14 @@ export async function resetCustomPrompt() {
 
   await fs.mkdir(dir, { recursive: true });
   await fs.writeFile(configPath, JSON.stringify(rest, null, 2), "utf-8");
+}
+
+export async function getResolvedPrompt(): Promise<string | undefined> {
+  const localPrompt = await getLocalPrompt();
+  if (localPrompt) {
+    return localPrompt;
+  }
+
+  const config = await getConfig();
+  return config.customPrompt;
 }

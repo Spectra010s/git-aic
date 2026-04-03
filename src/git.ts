@@ -2,6 +2,7 @@ import { simpleGit } from "simple-git";
 import type { SimpleGit } from "simple-git";
 
 const git: SimpleGit = simpleGit();
+const LOCAL_PROMPT_KEY = "aic.prompt";
 
 export const getGitDiff = async () => {
   try {
@@ -19,3 +20,25 @@ export const getGitDiff = async () => {
     return "";
   }
 };
+
+export async function getLocalPrompt(): Promise<string | undefined> {
+  try {
+    const prompt = await git.raw(["config", "--local", "--get", LOCAL_PROMPT_KEY]);
+    const trimmed = prompt.trim();
+    return trimmed || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function setLocalPrompt(prompt: string) {
+  await git.raw(["config", "--local", LOCAL_PROMPT_KEY, prompt]);
+}
+
+export async function resetLocalPrompt() {
+  try {
+    await git.raw(["config", "--local", "--unset", LOCAL_PROMPT_KEY]);
+  } catch {
+    return;
+  }
+}

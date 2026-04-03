@@ -15,6 +15,7 @@ import {
   setApiKey,
   setCustomPrompt,
 } from "./config.js";
+import { getLocalPrompt, resetLocalPrompt, setLocalPrompt } from "./git.js";
 import { DEFAULT_SYSTEM_PROMPT } from "./prompt.js";
 
 process.on("SIGINT", () => {
@@ -65,11 +66,26 @@ const promptCommand = program
 promptCommand
   .command("edit")
   .description("Edit and save a custom system prompt in your editor")
+  .option("--local", "Save the custom prompt in the current repository")
+  .option("--global", "Save the custom prompt in the global git-aic config")
   .option("-t, --text <prompt>", "Set the custom prompt from a string")
   .option("-f, --file <path>", "Set the custom prompt from a file")
-  .action(async (options: { text?: string; file?: string }) => {
+  .action(
+    async (options: {
+      local?: boolean;
+      global?: boolean;
+      text?: string;
+      file?: string;
+    }) => {
     try {
       const cfg = await getConfig();
+
+      if (options.local && options.global) {
+        console.log(
+          chalk.red("Use either --local or --global, not both at the same time."),
+        );
+        process.exit(1);
+      }
 
       if (options.text && options.file) {
         console.log(
@@ -85,8 +101,12 @@ promptCommand
       } else if (options.file) {
         editedPrompt = (await fs.readFile(options.file, "utf-8")).trim();
       } else {
+        const startingPrompt = options.local
+          ? ((await getLocalPrompt()) ?? cfg.customPrompt ?? DEFAULT_SYSTEM_PROMPT)
+          : (cfg.customPrompt ?? DEFAULT_SYSTEM_PROMPT);
+
         editedPrompt = await editPromptInEditor(
-          cfg.customPrompt || DEFAULT_SYSTEM_PROMPT,
+          startingPrompt,
         );
       }
 
@@ -95,20 +115,41 @@ promptCommand
         process.exit(1);
       }
 
-      await setCustomPrompt(editedPrompt);
-      console.log(chalk.green("Custom system prompt saved successfully!"));
+      if (options.local) {
+        await setLocalPrompt(editedPrompt);
+        console.log(chalk.green("Local system prompt saved successfully!"));
+      } else {
+        await setCustomPrompt(editedPrompt);
+        console.log(chalk.green("Global system prompt saved successfully!"));
+      }
     } catch (error) {
       console.error(chalk.red("Prompt edit failed:"), error);
       process.exit(1);
     }
-  });
+    },
+  );
 
 promptCommand
   .command("reset")
   .description("Reset the system prompt back to the default")
-  .action(async () => {
+  .option("--local", "Reset the prompt in the current repository")
+  .option("--global", "Reset the prompt in the global git-aic config")
+  .action(async (options: { local?: boolean; global?: boolean }) => {
+    if (options.local && options.global) {
+      console.log(
+        chalk.red("Use either --local or --global, not both at the same time."),
+      );
+      process.exit(1);
+    }
+
+    if (options.local) {
+      await resetLocalPrompt();
+      console.log(chalk.green("Local system prompt reset to default."));
+      return;
+    }
+
     await resetCustomPrompt();
-    console.log(chalk.green("System prompt reset to default."));
+    console.log(chalk.green("Global system prompt reset to default."));
   });
 
 program.action(async (options) => {
