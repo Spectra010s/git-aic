@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import fs from "fs/promises";
 import { Command } from "commander";
 import { simpleGit } from "simple-git";
 import type { SimpleGit } from "simple-git";
@@ -64,12 +65,30 @@ const promptCommand = program
 promptCommand
   .command("edit")
   .description("Edit and save a custom system prompt in your editor")
-  .action(async () => {
+  .option("-t, --text <prompt>", "Set the custom prompt from a string")
+  .option("-f, --file <path>", "Set the custom prompt from a file")
+  .action(async (options: { text?: string; file?: string }) => {
     try {
       const cfg = await getConfig();
-      const editedPrompt = await editPromptInEditor(
-        cfg.customPrompt || DEFAULT_SYSTEM_PROMPT,
-      );
+
+      if (options.text && options.file) {
+        console.log(
+          chalk.red("Use either --text or --file, not both at the same time."),
+        );
+        process.exit(1);
+      }
+
+      let editedPrompt = "";
+
+      if (options.text) {
+        editedPrompt = options.text.trim();
+      } else if (options.file) {
+        editedPrompt = (await fs.readFile(options.file, "utf-8")).trim();
+      } else {
+        editedPrompt = await editPromptInEditor(
+          cfg.customPrompt || DEFAULT_SYSTEM_PROMPT,
+        );
+      }
 
       if (!editedPrompt) {
         console.log(chalk.red("Prompt was empty. Nothing saved."));
