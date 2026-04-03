@@ -63,7 +63,7 @@ export const generateCommitMessage = async (
 
     process.exit(1);
   }
-  const prompt = buildPrompt(rawDiff);
+  const prompt = buildPrompt(rawDiff, config.customPrompt);
 
   try {
     const response = await axios.post<GeminiResponse>(
