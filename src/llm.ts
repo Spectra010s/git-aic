@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import chalk from "chalk";
 import { buildPrompt } from "./prompt.js";
-import { getConfig } from "./config.js";
+import { getConfig, getResolvedPrompt } from "./config.js";
 interface GeminiPart {
   text?: string;
 }
@@ -63,7 +63,7 @@ export const generateCommitMessage = async (
 
     process.exit(1);
   }
-  const prompt = buildPrompt(rawDiff, config.customPrompt);
+  const prompt = buildPrompt(rawDiff, await getResolvedPrompt());
 
   try {
     const response = await axios.post<GeminiResponse>(
