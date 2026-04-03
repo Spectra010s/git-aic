@@ -43,5 +43,13 @@ Git diff:
 Commit message:
 `.trim();
 
-export const buildPrompt = (diff: string, systemPrompt = DEFAULT_SYSTEM_PROMPT): string =>
-  systemPrompt.replace("{{diff}}", diff);
+export const buildPrompt = (
+  diff: string,
+  systemPrompt = DEFAULT_SYSTEM_PROMPT,
+): string => {
+  if (systemPrompt.includes("{{diff}}")) {
+    return systemPrompt.split("{{diff}}").join(diff);
+  }
+
+  return `${systemPrompt.trim()}\n\nGit diff:\n${diff}\n\nCommit message:`.trim();
+};
