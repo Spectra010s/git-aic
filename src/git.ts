@@ -4,6 +4,21 @@ import type { SimpleGit } from "simple-git";
 const git: SimpleGit = simpleGit();
 const LOCAL_PROMPT_KEY = "aic.prompt";
 
+export async function isInsideGitRepo(): Promise<boolean> {
+  try {
+    const result = await git.raw(["rev-parse", "--is-inside-work-tree"]);
+    return result.trim() === "true";
+  } catch {
+    return false;
+  }
+}
+
+export async function ensureInsideGitRepo() {
+  if (!(await isInsideGitRepo())) {
+    throw new Error("Not inside a Git repository.");
+  }
+}
+
 export const getGitDiff = async () => {
   try {
     await git.raw(["config", "core.autocrlf", "true"]);

@@ -5,7 +5,13 @@ import { Command } from "commander";
 import { simpleGit } from "simple-git";
 import type { SimpleGit } from "simple-git";
 import chalk from "chalk";
-import { getGitDiff } from "./git.js";
+import {
+  ensureInsideGitRepo,
+  getGitDiff,
+  getLocalPrompt,
+  resetLocalPrompt,
+  setLocalPrompt,
+} from "./git.js";
 import { generateCommitMessage } from "./llm.js";
 import { getUserConfirmation } from "./confirm.js";
 import { editPromptInEditor } from "./editor.js";
@@ -15,7 +21,6 @@ import {
   setApiKey,
   setCustomPrompt,
 } from "./config.js";
-import { getLocalPrompt, resetLocalPrompt, setLocalPrompt } from "./git.js";
 import { DEFAULT_SYSTEM_PROMPT } from "./prompt.js";
 
 process.on("SIGINT", () => {
@@ -24,6 +29,10 @@ process.on("SIGINT", () => {
 
 const git: SimpleGit = simpleGit();
 const program = new Command();
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
 
 program
   .name("git aic")
@@ -94,6 +103,10 @@ promptCommand
         process.exit(1);
       }
 
+      if (options.local) {
+        await ensureInsideGitRepo();
+      }
+
       let editedPrompt = "";
 
       if (options.text) {
@@ -123,7 +136,7 @@ promptCommand
         console.log(chalk.green("Global system prompt saved successfully!"));
       }
     } catch (error) {
-      console.error(chalk.red("Prompt edit failed:"), error);
+      console.error(chalk.red("Prompt edit failed:"), getErrorMessage(error));
       process.exit(1);
     }
     },
@@ -135,25 +148,32 @@ promptCommand
   .option("--local", "Reset the prompt in the current repository")
   .option("--global", "Reset the prompt in the global git-aic config")
   .action(async (options: { local?: boolean; global?: boolean }) => {
-    if (options.local && options.global) {
-      console.log(
-        chalk.red("Use either --local or --global, not both at the same time."),
-      );
+    try {
+      if (options.local && options.global) {
+        console.log(
+          chalk.red("Use either --local or --global, not both at the same time."),
+        );
+        process.exit(1);
+      }
+
+      if (options.local) {
+        await ensureInsideGitRepo();
+        await resetLocalPrompt();
+        console.log(chalk.green("Local system prompt reset to default."));
+        return;
+      }
+
+      await resetCustomPrompt();
+      console.log(chalk.green("Global system prompt reset to default."));
+    } catch (error) {
+      console.error(chalk.red("Prompt reset failed:"), getErrorMessage(error));
       process.exit(1);
     }
-
-    if (options.local) {
-      await resetLocalPrompt();
-      console.log(chalk.green("Local system prompt reset to default."));
-      return;
-    }
-
-    await resetCustomPrompt();
-    console.log(chalk.green("Global system prompt reset to default."));
   });
 
 program.action(async (options) => {
   try {
+    await ensureInsideGitRepo();
     const diff = await getGitDiff();
     if (!diff) {
       console.log(chalk.yellow("No changes to commit!"));
@@ -209,8 +229,8 @@ program.action(async (options) => {
       isAbort = e.code === "ABORT_ERR";
     }
 
-    const msg = isAbort ? "Operation cancelled" : error;
-    console.error(chalk.red("\n\nCommit failed:"), msg);
+    const msg = isAbort ? "Operation cancelled" : getErrorMessage(error);
+    console.error(chalk.red("\nCommit failed:"), msg);
     process.exit(isAbort ? 0 : 1);
   }
 });
