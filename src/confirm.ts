@@ -1,5 +1,6 @@
 import readline from "node:readline/promises";
 import chalk from "chalk";
+import { editTextInEditor } from "./editor.js";
 
 export const getUserConfirmation = async (message: string) => {
   const rl = readline.createInterface({
@@ -16,30 +17,24 @@ export const getUserConfirmation = async (message: string) => {
   const choice = (answer.toLowerCase() || "y").trim();
 
   if (choice === "e") {
-    const editRl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      terminal: true,
-    });
+    let editedMessage = message;
+    while (true) {
+      editedMessage = await editTextInEditor(
+        editedMessage,
+        "git-aic-commit-",
+        "COMMIT_EDITMSG",
+      );
 
-    console.log(chalk.cyan("\nEdit the message:"));
-
-    editRl.write(message);
-
-    let editedMessage = "";
-    while (!editedMessage.trim()) {
-      editedMessage = await editRl.question("> ");
+      if (editedMessage.trim()) {
+        return { choice: "y", message: editedMessage };
+      }
 
       if (!editedMessage.trim()) {
         console.log(
-          chalk.red("Commit message cannot be empty. Please type something."),
+          chalk.red("Commit message cannot be empty. Please edit it again."),
         );
       }
     }
-
-    editRl.close();
-
-    return { choice: "y", message: editedMessage };
   }
 
   return { choice, message };
