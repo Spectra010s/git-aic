@@ -21,13 +21,16 @@ Your workflow. Your control.
 - **Full Control Over Rules**  
   Modify the system prompt to enforce your own commit conventions and formatting style.
 
+- **Flexible Prompt Management**  
+  Edit prompts globally or per repository, and set them from your editor, direct text, or a file.
+
 - **Conventional Commits Compliance**  
   Strictly follows formats like `feat:`, `fix:`, `refactor:`, `chore:`.
 
 - **Commit Confirmation & Editing**  
   Before committing, you can:
   - Accept the suggested commit message
-  - Edit the message
+  - Edit the full message in your editor
   - Reject it
   - Retry generation
 
@@ -122,9 +125,9 @@ To view your current config:
 git aic config
 ```
 
-> "\*Note:\*\* it's masked by default for security reasons
+> **Note:** It is masked by default for security reasons.
 
-To view the whole current config api key
+To view the full saved API key:
 
 ```bash
 git aic config --show
@@ -160,6 +163,7 @@ git aic
 
 - Prompts you with a generated commit message.
 - You can **accept, edit, reject, or retry** the message.
+- Editing opens your editor and supports multiline commit messages.
 
 ### Commit and Link to Issue
 
@@ -191,25 +195,72 @@ git aic config
 
 - Displays your saved config.
 
-That’s it.
+### Manage Prompts
 
-No need to manually write commit messages anymore.
+Edit the global prompt:
+
+```bash
+git aic prompt edit
+```
+
+Set the global prompt directly from text:
+
+```bash
+git aic prompt edit --text "Write concise conventional commits with a short body when needed."
+```
+
+Load the global prompt from a file:
+
+```bash
+git aic prompt edit --file ./prompt.txt
+```
+
+Reset the global prompt:
+
+```bash
+git aic prompt reset
+```
+
+Edit a repository-local prompt:
+
+```bash
+git aic prompt edit --local
+```
+
+Set a repository-local prompt from text:
+
+```bash
+git aic prompt edit --local --text "Use a short subject and a clear explanatory body."
+```
+
+Load a repository-local prompt from a file:
+
+```bash
+git aic prompt edit --local --file ./commit-prompt.txt
+```
+
+Reset the local prompt:
+
+```bash
+git aic prompt reset --local
+```
+
+Prompt resolution order:
+
+1. local prompt from Git config
+2. global prompt from Git-AIC config
+3. built-in default prompt
 
 ## How It Works
 
 1. Captures your staged Git diff
 2. Builds a strict system prompt
-3. Sends the diff to Gemini
-4. Enforces Conventional Commit formatting
+3. Resolves the active prompt from local, global, or default settings
+4. Sends the prompt and diff to Gemini
 5. Prompts for commit confirmation (accept, edit, retry, reject)
-6. Executes `git commit` automatically
-7. Optionally pushes if `-p` flag is used
-
-You can modify commit behavior by editing:
-
-```
-src/prompt.ts
-```
+6. Opens your editor when you choose to edit the generated message
+7. Executes `git commit` automatically
+8. Optionally pushes if `-p` flag is used
 
 ---
 
@@ -247,7 +298,7 @@ You are **building them to fit your process.**
 
 ## License
 
-[**ISC License**](https://github.com/Spectra010s/git-aic/main/#license)
+[**ISC License**](https://github.com/Spectra010s/git-aic/blob/main/LICENSE)
 
 ## Author
 
@@ -261,9 +312,3 @@ Spectra010s
 This project is a fork and standalone version of:
 
 [https://github.com/samueltuoyo15/Commit-Message-Tool](https://github.com/samueltuoyo15/Commit-Message-Tool)
-
----
-
-![License](https://img.shields.io/badge/License-ISC-blue.svg)
-![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue?style=flat&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Runtime-Node.js-green?style=flat&logo=nodedotjs&logoColor=white)

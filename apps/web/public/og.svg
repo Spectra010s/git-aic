@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="120" y1="56" x2="1036" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#121212"/>
+      <stop offset="1" stop-color="#1a1a1c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(926 492) rotate(180) scale(208 208)">
+      <stop stop-color="#E4E4E7" stop-opacity=".05"/>
+      <stop offset="1" stop-color="#E4E4E7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="warm" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(201 110) rotate(46.7) scale(290 228)">
+      <stop stop-color="#A1A1AA" stop-opacity=".08"/>
+      <stop offset="1" stop-color="#A1A1AA" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="34" fill="url(#bg)"/>
+  <rect x="26" y="26" width="1148" height="578" rx="28" stroke="rgba(40,52,42,.12)" stroke-width="2"/>
+  <rect width="1200" height="630" rx="34" fill="url(#glow)"/>
+  <rect width="1200" height="630" rx="34" fill="url(#warm)"/>
+
+  <g opacity=".5">
+    <path d="M0 108H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 144H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 180H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 216H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 252H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 288H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 324H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 360H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 396H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 432H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 468H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 504H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M0 540H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M90 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M126 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M162 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M198 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M234 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M270 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M306 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M342 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M378 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M414 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M450 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M486 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M522 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M558 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M594 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M630 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M666 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M702 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M738 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M774 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M810 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M846 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M882 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M918 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M954 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M990 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M1026 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+    <path d="M1062 0V630" stroke="#FFFFFF" stroke-opacity=".03"/>
+  </g>
+
+  <g transform="translate(96 85) scale(0.25)">
+    <rect x="0" y="0" width="188" height="188" rx="38" fill="#1D1D1F"/>
+    <circle cx="66" cy="94" r="11" fill="#69746A"/>
+    <circle cx="124" cy="60" r="11" fill="#69746A"/>
+    <circle cx="124" cy="128" r="11" fill="#B4531A"/>
+    <path d="M76 94 L112 68" stroke="#69746A" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M76 94 L112 120" stroke="#69746A" stroke-width="5.5" stroke-linecap="round"/>
+  </g>
+
+  <text x="160" y="118" fill="#E4E4E7" font-family="'Inter', sans-serif" font-size="24" font-weight="700" letter-spacing="6">GIT-AIC</text>
+
+  <text x="96" y="222" fill="#EDEDED" font-family="'Inter', sans-serif" font-size="74" font-weight="700">
+    <tspan x="96" dy="0">AI-Powered Git</tspan>
+    <tspan x="96" dy="84">Commit Generator</tspan>
+  </text>
+
+  <text x="600" y="520" text-anchor="middle" fill="#A1A1AA" font-family="'Inter', sans-serif" font-size="29">
+    <tspan x="600" dy="0">Your brain is for building code, not for summarizing it.</tspan>
+  </text>
+</svg>
