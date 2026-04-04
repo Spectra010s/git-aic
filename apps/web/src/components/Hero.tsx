@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <section className="px-4 py-16 md:px-8 md:py-24 border-b border-line">
       <div className="grid gap-12 md:grid-cols-12 md:gap-8">
-        <header className="space-y-6 md:col-span-8">
+        <header className="space-y-6 md:col-span-7">
           <p className="font-mono text-sm text-ink-muted uppercase tracking-wider">
             Git CLI Extension
           </p>
@@ -31,7 +31,7 @@ export function Hero() {
           </div>
         </header>
 
-        <aside className="md:col-span-4 self-center text-sm md:text-base">
+        <aside className="md:col-span-5 self-center text-sm md:text-base">
           <div className="shadow-2xl">
             <div className="bg-surface border border-line border-b-0 px-4 py-3 flex gap-1.5 backdrop-blur-md">
               <div className="w-2.5 h-2.5 rounded-full border border-line bg-ink/10" />
