@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import fs from "fs/promises";
+import { readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { Command } from "commander";
 import { simpleGit } from "simple-git";
 import type { SimpleGit } from "simple-git";
@@ -27,6 +30,11 @@ process.on("SIGINT", () => {
   process.exit(0);
 });
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(
+  readFileSync(join(__dirname, "../package.json"), "utf-8"),
+);
+
 const git: SimpleGit = simpleGit();
 const program = new Command();
 
@@ -35,9 +43,9 @@ function getErrorMessage(error: unknown): string {
 }
 
 program
-  .name("git aic")
-  .description("AI-powered Git commit generator using Google Gemini")
-  .version("1.0.0")
+  .name(pkg.name)
+  .description(pkg.description)
+  .version(pkg.version)
   .option("-p, --push", "push after committing")
   .option("-i, --issue <number>", "Link commit to GitHub issue");
 
