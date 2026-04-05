@@ -14,10 +14,10 @@
     </radialGradient>
   </defs>
 
-  <rect width="1200" height="630" rx="34" fill="url(#bg)"/>
-  <rect x="26" y="26" width="1148" height="578" rx="28" stroke="rgba(40,52,42,.12)" stroke-width="2"/>
-  <rect width="1200" height="630" rx="34" fill="url(#glow)"/>
-  <rect width="1200" height="630" rx="34" fill="url(#warm)"/>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="26" y="26" width="1148" height="578" stroke="rgba(40,52,42,.12)" stroke-width="2"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#warm)"/>
 
   <g opacity=".5">
     <path d="M0 108H1200" stroke="#FFFFFF" stroke-opacity=".03"/>
