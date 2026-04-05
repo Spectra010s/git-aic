@@ -2,3 +2,4 @@ apps
 src/
 node_modules
 tsconfig.json
+docs
