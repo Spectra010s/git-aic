@@ -15,7 +15,7 @@
   "type": "module",
   "main": "./dist/cli.js",
   "bin": {
-    "git-aic": "./dist/cli.js"
+    "git-aic": "dist/cli.js"
   },
   "scripts": {
     "build": "tsc",
