@@ -1,6 +1,8 @@
 ---
 layout: ../../layouts/DocsLayout.astro
+title: Installation
 description: Installation
+seoDescription: Install Git-AIC globally with npm and confirm the CLI is available in your terminal.
 ---
 
 # Installation

@@ -1,6 +1,8 @@
 ---
 layout: ../../layouts/DocsLayout.astro
+title: Git-AIC Docs
 description: Documentation
+seoDescription: Read the Git-AIC documentation for installation, configuration, prompts, shared repository config, and troubleshooting.
 ---
 
 # Git-AIC Docs

@@ -1,6 +1,8 @@
 ---
 layout: ../../layouts/DocsLayout.astro
+title: Troubleshooting
 description: Troubleshooting
+seoDescription: Troubleshoot common Git-AIC issues including repository checks, empty prompts, and generated message editing.
 ---
 
 # Troubleshooting

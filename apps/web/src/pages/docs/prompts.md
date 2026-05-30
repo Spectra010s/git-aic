@@ -1,6 +1,8 @@
 ---
 layout: ../../layouts/DocsLayout.astro
+title: Prompts
 description: Prompts
+seoDescription: Learn how Git-AIC resolves global prompts, private local prompts, and shared repository prompts.
 ---
 
 # Prompts

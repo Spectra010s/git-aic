@@ -1,6 +1,8 @@
 ---
 layout: ../../layouts/DocsLayout.astro
+title: Configuration
 description: Configuration
+seoDescription: Configure Git-AIC API keys, environment variables, shared repository config, and basic commit commands.
 ---
 
 # Configuration

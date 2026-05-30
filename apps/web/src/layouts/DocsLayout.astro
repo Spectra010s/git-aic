@@ -10,15 +10,41 @@ const docsNav = [
   ["Prompts", "/docs/prompts"],
   ["Troubleshooting", "/docs/troubleshooting"],
 ];
+
+const pageTitle = frontmatter.title
+  ? `${frontmatter.title} | Git-AIC Docs`
+  : "Git-AIC Docs";
+const pageDescription =
+  frontmatter.seoDescription ?? frontmatter.description ?? "Git-AIC documentation for installation, configuration, prompts, and troubleshooting.";
+const canonicalPath = Astro.url.pathname.endsWith("/")
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
 ---
 
-<BaseLayout>
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  ogDescription={pageDescription}
+  canonical={`https://gitaic.vercel.app${canonicalPath}`}
+>
   <div class="min-h-screen bg-page text-ink font-sans antialiased">
     <div class="max-w-7xl mx-auto border-x border-line min-h-screen">
-      <header class="px-4 py-4 md:px-8 border-b border-line">
+      <div class="border-b border-line bg-surface px-4 py-2 text-center font-mono text-xs text-ink-muted md:px-8">
+        Git-AIC now supports shared repository prompt config.
+      </div>
+
+      <header class="flex items-center justify-between gap-4 border-b border-line px-4 py-4 md:px-8">
         <a class="inline-flex items-center gap-3 font-mono font-bold text-ink no-underline" href="/">
           <img src="/favicon.png" alt="" class="h-5 w-5" aria-hidden="true" />
           <span>Git-AIC</span>
+        </a>
+        <a
+          class="text-sm font-medium text-ink no-underline transition-opacity hover:opacity-80"
+          href="https://github.com/Spectra010s/git-aic"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub ↗
         </a>
       </header>
 
