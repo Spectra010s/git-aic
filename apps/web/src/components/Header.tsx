@@ -28,13 +28,13 @@ export function Header() {
         {menuOpen && (
           <ul className="list-none border-t border-line bg-surface p-0 mt-4">
             {navItems.map((item) => (
-              <li key={item} className="border-b border-line last:border-b-0">
+              <li key={item.label} className="border-b border-line last:border-b-0">
                 <a
                   className="block px-4 py-4 text-ink-muted no-underline hover:text-ink"
-                  href={`#${item.toLowerCase()}`}
+                  href={item.href}
                   onClick={() => setMenuOpen(false)}
                 >
-                  {item}
+                  {item.label}
                 </a>
               </li>
             ))}
@@ -60,9 +60,9 @@ export function Header() {
         <nav aria-label="Primary">
           <ul className="m-0 flex list-none items-center gap-8 p-0 text-sm font-medium text-ink-muted">
             {navItems.map((item) => (
-              <li key={item}>
-                <a className="block no-underline hover:text-ink transition-colors" href={`#${item.toLowerCase()}`}>
-                  {item}
+              <li key={item.label}>
+                <a className="block no-underline hover:text-ink transition-colors" href={item.href}>
+                  {item.label}
                 </a>
               </li>
             ))}
