@@ -15,7 +15,7 @@ export function Commands() {
           ["Commit & Push", COMMANDS.push, "Streamline your workflow with auto-pushing."],
           ["Link an issue", COMMANDS.issue, "Append closing references in-flow."],
           ["Global Prompt", COMMANDS.prompt.global, "Override system prompts globally for all repos."],
-          ["Repo prompt", COMMANDS.prompt.local, "Custom tailor instructions for specific projects."]
+          ["Shared Repo Prompt", COMMANDS.prompt.repo, "Commit team prompt rules with the repository."]
         ].map(([title, command, body]) => (
           <li key={title} className="p-6 border border-line bg-surface">
             <h3 className="text-lg mb-4">{title}</h3>

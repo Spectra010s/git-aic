@@ -5,6 +5,7 @@ export const COMMANDS = {
   prompt: {
     global: "git aic prompt edit --global",
     local: "git aic prompt edit --local",
+    repo: "git aic prompt edit --repo",
   },
   config: "git aic config --key <key>",
   push: "git aic --push",
@@ -28,7 +29,7 @@ export const docsNavItems = [
 export const FEATURES = [
   {
     title: "Bring Your Own Rules",
-    body: "Define prompt rules globally or per-repository. Enforce conventional commits, specific casing, or team standards locally.",
+    body: "Define prompt rules globally, privately per-repository, or in a shared repository config. Enforce conventional commits, specific casing, or team standards locally.",
   },
   {
     title: "Terminal Native",
@@ -49,7 +50,7 @@ export const WORKFLOW = [
   {
     step: "02",
     title: "Generate",
-    body: "Your latest code changes and local or global prompts are sent to the AI.",
+    body: "Your latest code changes and resolved prompt rules are sent to the AI.",
   },
   {
     step: "03",
