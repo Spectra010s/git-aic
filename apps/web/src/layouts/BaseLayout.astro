@@ -1,5 +1,12 @@
 ---
 import "../index.css";
+
+const {
+  title = "Git-AIC | AI-Powered Git Commit Generator",
+  description = "Stop wasting mental energy on commit messages. Git-AIC is an AI-powered Git commit generator that turns your latest code changes into professional semantic commits in seconds.",
+  ogDescription = "Generate professional semantic commits from your latest work using AI. A minimalist CLI utility for a cleaner Git workflow.",
+  canonical = "https://gitaic.vercel.app/",
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -8,22 +15,22 @@ import "../index.css";
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Git-AIC | AI-Powered Git Commit Generator</title>
+    <title>{title}</title>
     <meta
       name="description"
-      content="Stop wasting mental energy on commit messages. Git-AIC is an AI-powered Git commit generator that turns your latest code changes into professional semantic commits in seconds."
+      content={description}
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="Spectra010s" />
     <meta name="theme-color" content="#121212" />
-    <link rel="canonical" href="https://gitaic.vercel.app/" />
+    <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Git-AIC" />
-    <meta property="og:title" content="Git-AIC | AI-Powered Git Commit Generator" />
+    <meta property="og:title" content={title} />
     <meta
       property="og:description"
-      content="Generate professional semantic commits from your latest work using AI. A minimalist CLI utility for a cleaner Git workflow."
+      content={ogDescription}
     />
     <meta property="og:image" content="https://gitaic.vercel.app/og.png" />
     <meta property="og:image:type" content="image/png" />
@@ -31,10 +38,10 @@ import "../index.css";
     <meta property="og:image:height" content="630" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Git-AIC | AI-Powered Git Commit Generator" />
+    <meta name="twitter:title" content={title} />
     <meta
       name="twitter:description"
-      content="Generate professional semantic commits from your latest work using AI. A minimalist CLI utility for a cleaner Git workflow."
+      content={ogDescription}
     />
     <meta name="twitter:creator" content="@Spectra010s" />
     <meta name="twitter:image" content="https://gitaic.vercel.app/og.png" />

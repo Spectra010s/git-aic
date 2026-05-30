@@ -10,7 +10,20 @@ export const COMMANDS = {
   push: "git aic --push",
 };
 
-export const navItems = ["Features", "Workflow", "Commands"];
+export const navItems = [
+  { label: "Features", href: "#features" },
+  { label: "Workflow", href: "#workflow" },
+  { label: "Commands", href: "#commands" },
+  { label: "Documentation", href: "/docs" },
+];
+
+export const docsNavItems = [
+  { label: "Overview", href: "/docs" },
+  { label: "Installation", href: "/docs/installation" },
+  { label: "Configuration", href: "/docs/configuration" },
+  { label: "Prompts", href: "/docs/prompts" },
+  { label: "Troubleshooting", href: "/docs/troubleshooting" },
+];
 
 export const FEATURES = [
   {

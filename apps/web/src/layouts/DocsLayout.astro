@@ -1,0 +1,188 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { docsNavItems } from "../constants";
+
+const { frontmatter } = Astro.props;
+
+const pageTitle =
+  frontmatter.title === "Git-AIC Docs" || !frontmatter.title
+    ? "Git-AIC Docs"
+    : `${frontmatter.title} | Git-AIC Docs`;
+const pageDescription =
+  frontmatter.seoDescription ?? frontmatter.description ?? "Git-AIC documentation for installation, configuration, prompts, and troubleshooting.";
+const canonicalPath = Astro.url.pathname.endsWith("/")
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  ogDescription={pageDescription}
+  canonical={`https://gitaic.vercel.app${canonicalPath}`}
+>
+  <div class="min-h-screen bg-page text-ink font-sans antialiased">
+    <div class="max-w-7xl mx-auto border-x border-line min-h-screen">
+      <div class="border-b border-line bg-surface px-4 py-2 text-center font-mono text-xs text-ink-muted md:px-8">
+        Git-AIC now supports shared repository prompt config.
+      </div>
+
+      <header class="flex items-center justify-between gap-4 border-b border-line px-4 py-4 md:px-8">
+        <a class="inline-flex items-center gap-3 font-mono font-bold text-ink no-underline" href="/">
+          <img src="/favicon.png" alt="" class="h-5 w-5" aria-hidden="true" />
+          <span>Git-AIC</span>
+        </a>
+        <a
+          class="text-sm font-medium text-ink no-underline transition-opacity hover:opacity-80"
+          href="https://github.com/Spectra010s/git-aic"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub ↗
+        </a>
+      </header>
+
+      <main class="grid min-w-0 gap-10 px-4 py-12 md:grid-cols-[14rem_minmax(0,1fr)] md:px-8 md:py-16">
+        <aside class="md:sticky md:top-8 md:self-start">
+          <nav aria-label="Documentation">
+            <p class="mb-4 font-mono text-xs uppercase tracking-wider text-ink-muted">Docs</p>
+            <ul class="m-0 list-none space-y-2 p-0">
+              {docsNavItems.map((item) => (
+                <li>
+                  <a
+                    class="block border border-line px-3 py-2 text-sm text-ink-muted no-underline transition-colors hover:bg-surface hover:text-ink"
+                    href={item.href}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <article class="docs-content min-w-0 max-w-3xl">
+          {frontmatter.description && (
+            <p class="docs-kicker">{frontmatter.description}</p>
+          )}
+          <slot />
+        </article>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .docs-content {
+    color: var(--text-secondary);
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .docs-content h1,
+  .docs-content h2,
+  .docs-content h3 {
+    color: var(--text-primary);
+    line-height: 1.15;
+  }
+
+  .docs-content h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 700;
+  }
+
+  .docs-content h2 {
+    margin: 2.75rem 0 1rem;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .docs-content h3 {
+    margin: 2rem 0 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .docs-content p,
+  .docs-content ul,
+  .docs-content ol {
+    margin: 0 0 1.2rem;
+  }
+
+  .docs-content ul,
+  .docs-content ol {
+    padding-left: 1.25rem;
+  }
+
+  .docs-content li {
+    margin-bottom: 0.4rem;
+  }
+
+  .docs-content a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .docs-content pre {
+    max-width: 100%;
+    margin: 1.25rem 0 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    padding: 1rem;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .docs-content pre code {
+    display: block;
+    min-width: max-content;
+  }
+
+  .docs-content code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .docs-content :not(pre) > code {
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    padding: 0.1rem 0.3rem;
+    color: var(--text-primary);
+  }
+
+  .docs-content blockquote {
+    margin: 1.5rem 0;
+    border-left: 2px solid var(--border-strong);
+    padding-left: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .docs-content table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .docs-content th,
+  .docs-content td {
+    border: 1px solid var(--border-subtle);
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  .docs-content th {
+    color: var(--text-primary);
+  }
+
+  .docs-kicker {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>

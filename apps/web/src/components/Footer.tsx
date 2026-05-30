@@ -5,7 +5,7 @@ export function Footer() {
         Built by <a href="https://spectra010s.vercel.app" target="_blank" rel="noreferrer" className="text-ink hover:underline transition-all">Spectra010s</a>.
       </p>
       <nav aria-label="Footer" className="flex gap-8">
-        <a className="text-ink no-underline hover:text-ink-muted transition-colors font-medium" href="https://github.com/Spectra010s/git-aic/tree/main/docs">Documentation</a>
+        <a className="text-ink no-underline hover:text-ink-muted transition-colors font-medium" href="/docs">Documentation</a>
         <a className="text-ink no-underline hover:text-ink-muted transition-colors font-medium" href="https://github.com/Spectra010s/git-aic">GitHub</a>
       </nav>
     </footer>
