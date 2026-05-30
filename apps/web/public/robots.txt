@@ -9,3 +9,5 @@ Disallow: /
 
 User-agent: CCBot
 Disallow: /
+
+Sitemap: https://gitaic.vercel.app/sitemap-index.xml
