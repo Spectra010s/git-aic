@@ -10,4 +10,4 @@ Disallow: /
 User-agent: CCBot
 Disallow: /
 
-Sitemap: https://gitaic.vercel.app/sitemap-index.xml
+Sitemap: https://git-aic.pages.dev/sitemap-index.xml
