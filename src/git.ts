@@ -3,6 +3,7 @@ import type { SimpleGit } from "simple-git";
 
 const git: SimpleGit = simpleGit();
 const LOCAL_PROMPT_KEY = "aic.prompt";
+const REPO_ROOT_ARGS = ["rev-parse", "--show-toplevel"] as const;
 
 export async function isInsideGitRepo(): Promise<boolean> {
   try {
@@ -17,6 +18,11 @@ export async function ensureInsideGitRepo() {
   if (!(await isInsideGitRepo())) {
     throw new Error("Not inside a Git repository.");
   }
+}
+
+export async function getRepoRoot(): Promise<string> {
+  const root = await git.raw([...REPO_ROOT_ARGS]);
+  return root.trim();
 }
 
 export const getGitDiff = async () => {

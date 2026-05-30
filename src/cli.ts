@@ -19,10 +19,16 @@ import { generateCommitMessage } from "./llm.js";
 import { getUserConfirmation } from "./confirm.js";
 import { editPromptInEditor } from "./editor.js";
 import {
+  REPO_CONFIG_FILE,
   getConfig,
+  getPromptValue,
+  getRepoConfig,
+  initRepoConfig,
   resetCustomPrompt,
+  resetRepoPrompt,
   setApiKey,
   setCustomPrompt,
+  setRepoPrompt,
 } from "./config.js";
 import { DEFAULT_SYSTEM_PROMPT } from "./prompt.js";
 
@@ -48,6 +54,20 @@ program
   .version(pkg.version)
   .option("-p, --push", "push after committing")
   .option("-i, --issue <number>", "Link commit to GitHub issue");
+
+program
+  .command("init")
+  .description(`Create ${REPO_CONFIG_FILE} for shared repository prompt rules`)
+  .action(async () => {
+    try {
+      await ensureInsideGitRepo();
+      await initRepoConfig();
+      console.log(`${chalk.green(REPO_CONFIG_FILE)} created successfully!`);
+    } catch (error) {
+      console.error(chalk.red("Init failed:"), getErrorMessage(error));
+      process.exit(1);
+    }
+  });
 
 program
   .command("config")
@@ -84,22 +104,25 @@ promptCommand
   .command("edit")
   .description("Edit and save a custom system prompt in your editor")
   .option("--local", "Save the custom prompt in the current repository")
+  .option("--repo", "Save the custom prompt in git-aic.config.json for the current repository")
   .option("--global", "Save the custom prompt in the global git-aic config")
   .option("-t, --text <prompt>", "Set the custom prompt from a string")
   .option("-f, --file <path>", "Set the custom prompt from a file")
   .action(
     async (options: {
       local?: boolean;
+      repo?: boolean;
       global?: boolean;
       text?: string;
       file?: string;
     }) => {
     try {
       const cfg = await getConfig();
+      const selectedScopes = [options.local, options.repo, options.global].filter(Boolean);
 
-      if (options.local && options.global) {
+      if (selectedScopes.length > 1) {
         console.log(
-          chalk.red("Use either --local or --global, not both at the same time."),
+          chalk.red("Use only one of --local, --repo, or --global at a time."),
         );
         process.exit(1);
       }
@@ -111,7 +134,7 @@ promptCommand
         process.exit(1);
       }
 
-      if (options.local) {
+      if (options.local || options.repo) {
         await ensureInsideGitRepo();
       }
 
@@ -122,9 +145,13 @@ promptCommand
       } else if (options.file) {
         editedPrompt = (await fs.readFile(options.file, "utf-8")).trim();
       } else {
+        const repoPrompt = options.local || options.repo
+          ? getPromptValue(await getRepoConfig())
+          : undefined;
+        const globalPrompt = getPromptValue(cfg);
         const startingPrompt = options.local
-          ? ((await getLocalPrompt()) ?? cfg.customPrompt ?? DEFAULT_SYSTEM_PROMPT)
-          : (cfg.customPrompt ?? DEFAULT_SYSTEM_PROMPT);
+          ? ((await getLocalPrompt()) ?? repoPrompt ?? globalPrompt ?? DEFAULT_SYSTEM_PROMPT)
+          : (repoPrompt ?? globalPrompt ?? DEFAULT_SYSTEM_PROMPT);
 
         editedPrompt = await editPromptInEditor(
           startingPrompt,
@@ -139,6 +166,9 @@ promptCommand
       if (options.local) {
         await setLocalPrompt(editedPrompt);
         console.log(chalk.green("Local system prompt saved successfully!"));
+      } else if (options.repo) {
+        await setRepoPrompt(editedPrompt);
+        console.log(chalk.green("Repository system prompt saved successfully!"));
       } else {
         await setCustomPrompt(editedPrompt);
         console.log(chalk.green("Global system prompt saved successfully!"));
@@ -154,12 +184,15 @@ promptCommand
   .command("reset")
   .description("Reset the system prompt back to the default")
   .option("--local", "Reset the prompt in the current repository")
+  .option("--repo", "Reset the prompt in git-aic.config.json for the current repository")
   .option("--global", "Reset the prompt in the global git-aic config")
-  .action(async (options: { local?: boolean; global?: boolean }) => {
+  .action(async (options: { local?: boolean; repo?: boolean; global?: boolean }) => {
     try {
-      if (options.local && options.global) {
+      const selectedScopes = [options.local, options.repo, options.global].filter(Boolean);
+
+      if (selectedScopes.length > 1) {
         console.log(
-          chalk.red("Use either --local or --global, not both at the same time."),
+          chalk.red("Use only one of --local, --repo, or --global at a time."),
         );
         process.exit(1);
       }
@@ -168,6 +201,13 @@ promptCommand
         await ensureInsideGitRepo();
         await resetLocalPrompt();
         console.log(chalk.green("Local system prompt reset to default."));
+        return;
+      }
+
+      if (options.repo) {
+        await ensureInsideGitRepo();
+        await resetRepoPrompt();
+        console.log(chalk.green("Repository system prompt reset to default."));
         return;
       }
 

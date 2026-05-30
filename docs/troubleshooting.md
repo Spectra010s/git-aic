@@ -8,7 +8,29 @@ If you run Git-AIC outside a Git repository, it fails with:
 Commit failed: Not inside a Git repository.
 ```
 
-Local prompt commands such as `git aic prompt edit --local` also require a Git repository.
+Local and repository prompt commands such as `git aic prompt edit --local`, `git aic prompt edit --repo`, and `git aic init` also require a Git repository.
+
+## Repository Config Already Exists
+
+If `git aic init` fails because `git-aic.config.json` already exists, edit the existing file or run:
+
+```bash
+git aic prompt edit --repo
+```
+
+Git-AIC does not overwrite an existing repository config during initialization.
+
+## Shared Repository Prompt Not Applying
+
+Make sure `git-aic.config.json` is at the repository root and uses the `prompt` field:
+
+```json
+{
+  "prompt": "Use conventional commits."
+}
+```
+
+Shared repository prompts take priority over private local and global prompts.
 
 ## Empty Prompt
 

@@ -22,7 +22,7 @@ Your workflow. Your control.
   Modify the system prompt to enforce your own commit conventions and formatting style.
 
 - **Flexible Prompt Management**  
-  Edit prompts globally or per repository, and set them from your editor, direct text, or a file.
+  Edit prompts globally, privately per repository, or through committed repository config.
 
 - **Conventional Commits Compliance**  
   Strictly follows formats like `feat:`, `fix:`, `refactor:`, `chore:`.
@@ -197,6 +197,14 @@ git aic config
 
 ### Manage Prompts
 
+Create a shared repository config:
+
+```bash
+git aic init
+```
+
+This creates `git-aic.config.json`, which can be committed for team-wide prompt rules.
+
 Edit the global prompt:
 
 ```bash
@@ -227,6 +235,8 @@ Edit a repository-local prompt:
 git aic prompt edit --local
 ```
 
+This saves a private prompt in Git config for your current clone only.
+
 Set a repository-local prompt from text:
 
 ```bash
@@ -245,17 +255,44 @@ Reset the local prompt:
 git aic prompt reset --local
 ```
 
+Edit a shared repository prompt:
+
+```bash
+git aic prompt edit --repo
+```
+
+This saves a committed team prompt in `git-aic.config.json`.
+
+Set a shared repository prompt from text:
+
+```bash
+git aic prompt edit --repo --text "Use Conventional Commits format: <type>(<scope>): <description>. Keep the subject under 72 characters. Use scopes that match the changed package, module, or feature area. Write clear imperative summaries without trailing punctuation. Include a short body with bullet points only when the change is complex. Do not include explanations outside the commit message."
+```
+
+Load a shared repository prompt from a file:
+
+```bash
+git aic prompt edit --repo --file ./commit-prompt.txt
+```
+
+Reset the shared repository prompt:
+
+```bash
+git aic prompt reset --repo
+```
+
 Prompt resolution order:
 
-1. local prompt from Git config
-2. global prompt from Git-AIC config
-3. built-in default prompt
+1. shared repository prompt from `git-aic.config.json`
+2. private local prompt from Git config
+3. global prompt from Git-AIC config
+4. built-in default prompt
 
 ## How It Works
 
 1. Captures your staged Git diff
 2. Builds a strict system prompt
-3. Resolves the active prompt from local, global, or default settings
+3. Resolves the active prompt from local, repo, global, or default settings
 4. Sends the prompt and diff to Gemini
 5. Prompts for commit confirmation (accept, edit, retry, reject)
 6. Opens your editor when you choose to edit the generated message

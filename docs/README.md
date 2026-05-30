@@ -13,7 +13,7 @@ If you are new to the tool, start with installation and configuration first. Aft
   API key setup, config commands, and the core commit flow.
 
 - [Prompts](https://github.com/Spectra010s/git-aic/blob/main/docs/prompts.md)  
-  Global prompts, local prompts, prompt resolution order, and editor behavior.
+  Global prompts, private local prompts, shared repository prompts, prompt resolution order, and editor behavior.
 
 - [Troubleshooting](https://github.com/Spectra010s/git-aic/blob/main/docs/troubleshooting.md)  
   Common problems such as running outside a Git repository or clearing a generated message.
