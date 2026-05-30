@@ -1,0 +1,159 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { frontmatter } = Astro.props;
+
+const docsNav = [
+  ["Overview", "/docs"],
+  ["Installation", "/docs/installation"],
+  ["Configuration", "/docs/configuration"],
+  ["Prompts", "/docs/prompts"],
+  ["Troubleshooting", "/docs/troubleshooting"],
+];
+---
+
+<BaseLayout>
+  <div class="min-h-screen bg-page text-ink font-sans antialiased">
+    <div class="max-w-7xl mx-auto border-x border-line min-h-screen">
+      <header class="px-4 py-4 md:px-8 border-b border-line">
+        <a class="inline-flex items-center gap-3 font-mono font-bold text-ink no-underline" href="/">
+          <img src="/favicon.png" alt="" class="h-5 w-5" aria-hidden="true" />
+          <span>Git-AIC</span>
+        </a>
+      </header>
+
+      <main class="grid gap-10 px-4 py-12 md:grid-cols-[14rem_1fr] md:px-8 md:py-16">
+        <aside class="md:sticky md:top-8 md:self-start">
+          <nav aria-label="Documentation">
+            <p class="mb-4 font-mono text-xs uppercase tracking-wider text-ink-muted">Docs</p>
+            <ul class="m-0 list-none space-y-2 p-0">
+              {docsNav.map(([label, href]) => (
+                <li>
+                  <a
+                    class="block border border-line px-3 py-2 text-sm text-ink-muted no-underline transition-colors hover:bg-surface hover:text-ink"
+                    href={href}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <article class="docs-content max-w-3xl">
+          {frontmatter.description && (
+            <p class="docs-kicker">{frontmatter.description}</p>
+          )}
+          <slot />
+        </article>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .docs-content {
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  .docs-content h1,
+  .docs-content h2,
+  .docs-content h3 {
+    color: var(--text-primary);
+    line-height: 1.15;
+  }
+
+  .docs-content h1 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 700;
+  }
+
+  .docs-content h2 {
+    margin: 2.75rem 0 1rem;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .docs-content h3 {
+    margin: 2rem 0 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  .docs-content p,
+  .docs-content ul,
+  .docs-content ol {
+    margin: 0 0 1.2rem;
+  }
+
+  .docs-content ul,
+  .docs-content ol {
+    padding-left: 1.25rem;
+  }
+
+  .docs-content li {
+    margin-bottom: 0.4rem;
+  }
+
+  .docs-content a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .docs-content pre {
+    margin: 1.25rem 0 1.5rem;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    padding: 1rem;
+  }
+
+  .docs-content code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  .docs-content :not(pre) > code {
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-secondary);
+    padding: 0.1rem 0.3rem;
+    color: var(--text-primary);
+  }
+
+  .docs-content blockquote {
+    margin: 1.5rem 0;
+    border-left: 2px solid var(--border-strong);
+    padding-left: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .docs-content table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .docs-content th,
+  .docs-content td {
+    border: 1px solid var(--border-subtle);
+    padding: 0.75rem;
+    text-align: left;
+  }
+
+  .docs-content th {
+    color: var(--text-primary);
+  }
+
+  .docs-kicker {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
