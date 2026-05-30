@@ -1,4 +1,4 @@
-const siteUrl = "https://gitaic.vercel.app";
+const siteUrl = "https://git-aic.pages.dev";
 const creator = {
   "@type": "Person",
   name: "Spectra010s",
