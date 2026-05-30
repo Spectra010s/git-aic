@@ -6,6 +6,7 @@ const {
   description = "Stop wasting mental energy on commit messages. Git-AIC is an AI-powered Git commit generator that turns your latest code changes into professional semantic commits in seconds.",
   ogDescription = "Generate professional semantic commits from your latest work using AI. A minimalist CLI utility for a cleaner Git workflow.",
   canonical = "https://gitaic.vercel.app/",
+  schema,
 } = Astro.props;
 ---
 
@@ -48,68 +49,7 @@ const {
     <meta name="google-site-verification" content="-oHieeYQu6xGSIhnHW1QfQGRRFUikmwUrWl_oYU2xQg" />
     <meta name="google-site-verification" content="Q24M4X9zoQ0B3kNG3W7ekoB2-3_2fJi8_vNH2W7dTNU" />
     <meta name="msvalidate.01" content="E8636E77457C3ED17C9AADD9084197F3" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "name": "Git-AIC",
-            "url": "https://gitaic.vercel.app",
-            "description": "A Git CLI utility that uses AI to format recent work into clear and readable commit logs."
-          },
-          {
-            "@type": "SoftwareApplication",
-            "name": "Git-AIC",
-            "applicationCategory": "DeveloperApplication",
-            "operatingSystem": "Windows, macOS, Linux, Android",
-            "description": "An AI-powered Git terminal tool that automates the commit workflow for developers.",
-            "author": {
-              "@type": "Person",
-              "name": "Spectra010s",
-              "url": "https://spectra010s.vercel.app"
-            },
-            "codeRepository": "https://github.com/Spectra010s/git-aic",
-            "downloadUrl": "https://www.npmjs.com/package/git-aic",
-            "sameAs": [
-              "https://github.com/Spectra010s/git-aic",
-              "https://spectra010s.vercel.app"
-            ]
-          },
-          {
-            "@type": "HowTo",
-            "name": "How to use Git-AIC",
-            "step": [
-              {
-                "@type": "HowToStep",
-                "name": "Stage",
-                "text": "Add your code changes to the Git staging area."
-              },
-              {
-                "@type": "HowToStep",
-                "name": "Generate",
-                "text": "Run git-aic to generate a commit message."
-              },
-              {
-                "@type": "HowToStep",
-                "name": "Review",
-                "text": "Review, edit, and approve the generated commit."
-              }
-            ]
-          },
-          {
-            "@type": "Organization",
-            "name": "Hiverra",
-            "url": "https://github.com/hiverra",
-            "logo": "https://gitaic.vercel.app/favicon.png",
-            "sameAs": [
-              "https://github.com/Spectra010s/git-aic",
-              "https://x.com/Spectra010s"
-            ]
-          }
-        ]
-      }
-    </script>
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body>
     <slot />
