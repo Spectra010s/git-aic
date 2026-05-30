@@ -22,7 +22,7 @@ const docsNav = [
         </a>
       </header>
 
-      <main class="grid gap-10 px-4 py-12 md:grid-cols-[14rem_1fr] md:px-8 md:py-16">
+      <main class="grid min-w-0 gap-10 px-4 py-12 md:grid-cols-[14rem_minmax(0,1fr)] md:px-8 md:py-16">
         <aside class="md:sticky md:top-8 md:self-start">
           <nav aria-label="Documentation">
             <p class="mb-4 font-mono text-xs uppercase tracking-wider text-ink-muted">Docs</p>
@@ -41,7 +41,7 @@ const docsNav = [
           </nav>
         </aside>
 
-        <article class="docs-content max-w-3xl">
+        <article class="docs-content min-w-0 max-w-3xl">
           {frontmatter.description && (
             <p class="docs-kicker">{frontmatter.description}</p>
           )}
@@ -56,6 +56,7 @@ const docsNav = [
   .docs-content {
     color: var(--text-secondary);
     line-height: 1.75;
+    overflow-wrap: anywhere;
   }
 
   .docs-content h1,
@@ -105,11 +106,19 @@ const docsNav = [
   }
 
   .docs-content pre {
+    max-width: 100%;
     margin: 1.25rem 0 1.5rem;
     overflow-x: auto;
     border: 1px solid var(--border-subtle);
     background: var(--bg-secondary);
     padding: 1rem;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .docs-content pre code {
+    display: block;
+    min-width: max-content;
   }
 
   .docs-content code {
