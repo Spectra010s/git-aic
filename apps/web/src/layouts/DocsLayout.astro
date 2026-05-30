@@ -11,9 +11,10 @@ const docsNav = [
   ["Troubleshooting", "/docs/troubleshooting"],
 ];
 
-const pageTitle = frontmatter.title
-  ? `${frontmatter.title} | Git-AIC Docs`
-  : "Git-AIC Docs";
+const pageTitle =
+  frontmatter.title === "Git-AIC Docs" || !frontmatter.title
+    ? "Git-AIC Docs"
+    : `${frontmatter.title} | Git-AIC Docs`;
 const pageDescription =
   frontmatter.seoDescription ?? frontmatter.description ?? "Git-AIC documentation for installation, configuration, prompts, and troubleshooting.";
 const canonicalPath = Astro.url.pathname.endsWith("/")
