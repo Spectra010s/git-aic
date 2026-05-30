@@ -1,8 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import App from "../App";
+import { createHomeSchema } from "../lib/schema";
 ---
 
-<BaseLayout>
+<BaseLayout schema={createHomeSchema()}>
   <App client:load />
 </BaseLayout>

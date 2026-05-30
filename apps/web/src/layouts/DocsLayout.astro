@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import { docsNavItems } from "../constants";
+import { createDocsSchema } from "../lib/schema";
 
 const { frontmatter } = Astro.props;
 
@@ -13,6 +14,11 @@ const pageDescription =
 const canonicalPath = Astro.url.pathname.endsWith("/")
   ? Astro.url.pathname
   : `${Astro.url.pathname}/`;
+const schema = createDocsSchema({
+  title: frontmatter.title ?? "Git-AIC Docs",
+  description: pageDescription,
+  path: canonicalPath,
+});
 ---
 
 <BaseLayout
@@ -20,6 +26,7 @@ const canonicalPath = Astro.url.pathname.endsWith("/")
   description={pageDescription}
   ogDescription={pageDescription}
   canonical={`https://gitaic.vercel.app${canonicalPath}`}
+  schema={schema}
 >
   <div class="min-h-screen bg-page text-ink font-sans antialiased">
     <div class="max-w-7xl mx-auto border-x border-line min-h-screen">
