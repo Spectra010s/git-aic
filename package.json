@@ -1,6 +1,6 @@
 {
   "name": "git-aic",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "AI-powered Git commit generator",
   "homepage": "https://github.com/Spectra010s/git-aic",
   "bugs": {
