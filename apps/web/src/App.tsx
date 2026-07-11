@@ -26,6 +26,7 @@ export default function App() {
           </article>
           <ul className="m-0 list-none p-6 space-y-4 bg-surface border border-line">
             {[
+              "Support for multiple AI providers",
               "Global, local, and shared repository prompt configuration",
               "Editor-based prompt and commit-message editing",
               "GitHub issue linking during generation"
