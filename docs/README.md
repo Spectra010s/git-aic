@@ -9,8 +9,11 @@ If you are new to the tool, start with installation and configuration first. Aft
 - [Installation](https://github.com/Spectra010s/git-aic/blob/main/docs/installation.md)  
   How to install Git-AIC and confirm the CLI is available.
 
+- [Usage](https://github.com/Spectra010s/git-aic/blob/main/docs/usage.md)  
+  Running the tool globally or locally using package scripts (npm/pnpm).
+
 - [Configuration](https://github.com/Spectra010s/git-aic/blob/main/docs/configuration.md)  
-  API key setup, config commands, and the core commit flow.
+  API key setup, config commands, and active provider/model rules.
 
 - [Prompts](https://github.com/Spectra010s/git-aic/blob/main/docs/prompts.md)  
   Global prompts, private local prompts, shared repository prompts, prompt resolution order, and editor behavior.
@@ -21,6 +24,7 @@ If you are new to the tool, start with installation and configuration first. Aft
 ## Recommended Reading Order
 
 1. Installation
-2. Configuration
-3. Prompts
-4. Troubleshooting
+2. Usage
+3. Configuration
+4. Prompts
+5. Troubleshooting

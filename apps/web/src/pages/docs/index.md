@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/DocsLayout.astro
-title: Git-AIC Docs
-description: Documentation
+title: Getting Started
+description: Getting Started
 seoDescription: Read the Git-AIC documentation for installation, configuration, prompts, shared repository config, and troubleshooting.
 ---
 
@@ -16,8 +16,11 @@ If you are new to the tool, start with installation and configuration first. Aft
 - [Installation](/docs/installation)  
   How to install Git-AIC and confirm the CLI is available.
 
+- [Usage](/docs/usage)  
+  Running the tool globally or locally using package scripts (npm/pnpm).
+
 - [Configuration](/docs/configuration)  
-  API key setup, config commands, and the core commit flow.
+  API key setup, config commands, and active provider/model rules.
 
 - [Prompts](/docs/prompts)  
   Global prompts, private local prompts, shared repository prompts, prompt resolution order, and editor behavior.
@@ -28,6 +31,7 @@ If you are new to the tool, start with installation and configuration first. Aft
 ## Recommended Reading Order
 
 1. Installation
-2. Configuration
-3. Prompts
-4. Troubleshooting
+2. Usage
+3. Configuration
+4. Prompts
+5. Troubleshooting
