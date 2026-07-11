@@ -140,8 +140,8 @@ Supported scope flags are: `--global` (default), `--local` (repository `.git/con
 
 If you prefer environment variables, they take absolute precedence over config files for API keys:
 
-* **Gemini API Key**: `export GEMINI_COMMIT_MESSAGE_API_KEY=your_key`
-* **OpenAI API Key**: `export OPENAI_API_KEY=your_key`
+- **Gemini API Key**: `export GEMINI_COMMIT_MESSAGE_API_KEY=your_key`
+- **OpenAI API Key**: `export OPENAI_API_KEY=your_key`
 
 ## Usage
 
@@ -230,6 +230,7 @@ You are **building them to fit your process.**
 
 Spectra010s
 
+- [Portfolio](https://spectra010s.biuld.app)
 - [Twitter](https://x.com/Spectra010s)
 - [LinkedIn](https://www.linkedin.com/in/adeloye-adetayo-273723253)
 

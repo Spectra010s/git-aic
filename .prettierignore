@@ -1,0 +1,7 @@
+# prettier ignore files
+node_modules/
+.astro
+.git/
+.vercel/
+dist/
+

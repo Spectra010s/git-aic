@@ -15,9 +15,10 @@ git aic config
 ## Configuration Scopes
 
 When reading and writing configurations, Git-AIC supports three scopes:
-* `--global` (default): Configures settings globally in `~/.config/git-aic/config.json`.
-* `--local`: Configures settings locally in your current Git repository config (`.git/config`).
-* `--repo`: Configures settings repository-wide in `git-aic.config.json` at the root of the repository (can be committed to Git).
+
+- `--global` (default): Configures settings globally in `~/.config/git-aic/config.json`.
+- `--local`: Configures settings locally in your current Git repository config (`.git/config`).
+- `--repo`: Configures settings repository-wide in `git-aic.config.json` at the root of the repository (can be committed to Git).
 
 ---
 
@@ -30,13 +31,15 @@ git aic config set <key> <value> [--global|--repo|--local]
 ```
 
 ### Supported Keys:
-* `provider`: The active provider (`gemini` or `openai`).
-* `model`: The active model name (e.g., `gemini-2.5-flash`, `gpt-4o-mini`).
-* `gemini-key`: Your Google Gemini API Key.
-* `openai-key`: Your OpenAI API Key.
-* `prompt`: A custom system instruction prompt.
+
+- `provider`: The active provider (`gemini` or `openai`).
+- `model`: The active model name (e.g., `gemini-2.5-flash`, `gpt-4o-mini`).
+- `gemini-key`: Your Google Gemini API Key.
+- `openai-key`: Your OpenAI API Key.
+- `prompt`: A custom system instruction prompt.
 
 ### Examples:
+
 ```bash
 # Set OpenAI as the active provider globally
 git aic config set provider openai
@@ -56,6 +59,7 @@ git aic config get <key> [--global|--repo|--local]
 ```
 
 ### Examples:
+
 ```bash
 # Get the active model resolved from the cascade
 git aic config get model
@@ -71,17 +75,21 @@ git aic config get gemini-key --global
 When retrieving configuration values, Git-AIC resolves them using different cascades depending on the type of key to prioritize team defaults for configurations and security for keys.
 
 ### 1. General Config Cascade (provider, model)
+
 Repository settings override local clones, which override global user preferences:
+
 1. **Repository Config** (`git-aic.config.json` at the repository root).
 2. **Local Git Config** (`.git/config`).
 3. **Global Config** (`~/.config/git-aic/config.json`).
 
 ### 2. API Credentials Cascade (gemini-key, openai-key)
+
 Environment variables take absolute precedence, followed by global settings, local overrides, and repository-wide configs:
+
 1. **Environment Variables** (`GEMINI_COMMIT_MESSAGE_API_KEY` or `OPENAI_API_KEY`).
 2. **Global Config** (`~/.config/git-aic/config.json`).
 3. **Local Git Config** (`.git/config`).
-4. **Repository Config** (`git-aic.config.json` — *avoid storing keys here*).
+4. **Repository Config** (`git-aic.config.json` — _avoid storing keys here_).
 
 ---
 

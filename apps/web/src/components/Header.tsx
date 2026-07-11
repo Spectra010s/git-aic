@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { navItems } from "../constants";
+import { useState } from 'react';
+import { navItems } from '../constants';
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -7,7 +7,10 @@ export function Header() {
   return (
     <header className="py-4 border-b border-line">
       <div className="flex items-center justify-between gap-4 md:hidden px-4">
-        <a className="flex items-center gap-3 font-mono font-bold text-ink no-underline" href="#top">
+        <a
+          className="flex items-center gap-3 font-mono font-bold text-ink no-underline"
+          href="#top"
+        >
           <img src="/favicon.png" alt="" className="h-5 w-5" aria-hidden="true" />
           <span>Git-AIC</span>
         </a>
@@ -53,7 +56,10 @@ export function Header() {
       </nav>
 
       <div className="hidden md:flex md:items-center md:justify-between px-8">
-        <a className="flex items-center gap-3 font-mono text-lg font-bold text-ink no-underline" href="#top">
+        <a
+          className="flex items-center gap-3 font-mono text-lg font-bold text-ink no-underline"
+          href="#top"
+        >
           <img src="/favicon.png" alt="" className="h-5 w-5" aria-hidden="true" />
           <span>Git-AIC</span>
         </a>

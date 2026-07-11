@@ -13,7 +13,7 @@
   "license": "ISC",
   "author": {
     "name": "Spectra010s",
-    "url": "https://spectra010s.build.app"
+    "url": "https://spectra010s.biuld.app"
   },
   "type": "module",
   "main": "./dist/cli.js",
@@ -35,6 +35,12 @@
     "ai-commits",
     "gemini",
     "openai"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "package.json",
+    "LICENSE"
   ],
   "dependencies": {
     "axios": "^1.13.2",

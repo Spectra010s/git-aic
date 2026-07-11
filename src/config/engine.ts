@@ -1,25 +1,29 @@
-import fs from "fs/promises";
-import path from "path";
-import chalk from "chalk";
-import { simpleGit } from "simple-git";
-import { Config } from "./types.js";
-import { getConfigPath, getRepoConfigPath } from "./paths.js";
+import fs from 'fs/promises';
+import path from 'path';
+import chalk from 'chalk';
+import { simpleGit } from 'simple-git';
+import { Config } from './types.js';
+import { getConfigPath, getRepoConfigPath } from './paths.js';
 
 // Helper to determine the target scope from options
-export function getScope(options: { global?: boolean; repo?: boolean; local?: boolean }): "global" | "repo" | "local" {
-  if (options.local) return "local";
-  if (options.repo) return "repo";
-  return "global";
+export function getScope(options: {
+  global?: boolean;
+  repo?: boolean;
+  local?: boolean;
+}): 'global' | 'repo' | 'local' {
+  if (options.local) return 'local';
+  if (options.repo) return 'repo';
+  return 'global';
 }
 
 export async function getConfig(): Promise<Config> {
   const configPath = getConfigPath();
   try {
-    const content = await fs.readFile(configPath, "utf-8");
+    const content = await fs.readFile(configPath, 'utf-8');
     return JSON.parse(content) as Config;
   } catch (err: any) {
-    if (err.code === "ENOENT") return {};
-    console.error(chalk.red("Failed to read config:"), err.message);
+    if (err.code === 'ENOENT') return {};
+    console.error(chalk.red('Failed to read config:'), err.message);
     return {};
   }
 }
@@ -27,11 +31,11 @@ export async function getConfig(): Promise<Config> {
 export async function getRepoConfig(): Promise<Config> {
   const configPath = await getRepoConfigPath();
   try {
-    const content = await fs.readFile(configPath, "utf-8");
+    const content = await fs.readFile(configPath, 'utf-8');
     return JSON.parse(content) as Config;
   } catch (err: any) {
-    if (err.code === "ENOENT") return {};
-    console.error(chalk.red("Failed to read repo config:"), err.message);
+    if (err.code === 'ENOENT') return {};
+    console.error(chalk.red('Failed to read repo config:'), err.message);
     return {};
   }
 }
@@ -43,26 +47,26 @@ export async function saveConfig(data: Partial<Config>) {
 
   const current = await getConfig();
   const newConfig: Config = { ...current, ...data };
-  await fs.writeFile(configPath, JSON.stringify(newConfig, null, 2), "utf-8");
+  await fs.writeFile(configPath, JSON.stringify(newConfig, null, 2), 'utf-8');
 }
 
 export async function saveRepoConfig(data: Partial<Config>) {
   const configPath = await getRepoConfigPath();
   const current = await getRepoConfig();
   const newConfig: Config = { ...current, ...data };
-  await fs.writeFile(configPath, JSON.stringify(newConfig, null, 2), "utf-8");
+  await fs.writeFile(configPath, JSON.stringify(newConfig, null, 2), 'utf-8');
 }
 
 // Cascading getConfigValue
 export async function getResolvedConfigValue(key: keyof Config): Promise<string | undefined> {
-  const isApiKey = key === "apiKey" || key === "openaiApiKey";
+  const isApiKey = key === 'apiKey' || key === 'openaiApiKey';
 
   if (isApiKey) {
     // API Key Cascade: Env -> Global -> Local -> Repo
-    if (key === "apiKey" && process.env.GEMINI_COMMIT_MESSAGE_API_KEY) {
+    if (key === 'apiKey' && process.env.GEMINI_COMMIT_MESSAGE_API_KEY) {
       return process.env.GEMINI_COMMIT_MESSAGE_API_KEY;
     }
-    if (key === "openaiApiKey" && process.env.OPENAI_API_KEY) {
+    if (key === 'openaiApiKey' && process.env.OPENAI_API_KEY) {
       return process.env.OPENAI_API_KEY;
     }
 
@@ -104,11 +108,14 @@ export async function getResolvedConfigValue(key: keyof Config): Promise<string 
 }
 
 // Get a configuration value from a specific scope
-export async function getConfigValueAtScope(key: keyof Config, scope: "global" | "repo" | "local"): Promise<string | undefined> {
-  if (scope === "repo") {
+export async function getConfigValueAtScope(
+  key: keyof Config,
+  scope: 'global' | 'repo' | 'local'
+): Promise<string | undefined> {
+  if (scope === 'repo') {
     const cfg = await getRepoConfig();
     return cfg[key];
-  } else if (scope === "local") {
+  } else if (scope === 'local') {
     const git = simpleGit();
     try {
       const localVal = await git.getConfig(`git-aic.${key}`);
@@ -123,10 +130,14 @@ export async function getConfigValueAtScope(key: keyof Config, scope: "global" |
 }
 
 // Cascading saveConfigValue to specific scope
-export async function saveConfigValue(key: keyof Config, value: string, scope: "global" | "repo" | "local") {
-  if (scope === "repo") {
+export async function saveConfigValue(
+  key: keyof Config,
+  value: string,
+  scope: 'global' | 'repo' | 'local'
+) {
+  if (scope === 'repo') {
     await saveRepoConfig({ [key]: value });
-  } else if (scope === "local") {
+  } else if (scope === 'local') {
     const git = simpleGit();
     await git.addConfig(`git-aic.${key}`, value);
   } else {

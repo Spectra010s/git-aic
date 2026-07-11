@@ -1,4 +1,4 @@
-import { WORKFLOW } from "../constants";
+import { WORKFLOW } from '../constants';
 
 export function Workflow() {
   return (
