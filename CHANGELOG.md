@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Dedicated `Usage` guide covering CLI flags and local project script configurations (`npm`/`pnpm`).
+- Expanded `Installation` guide covering global and local project-level installations.
+
 ## [1.4.0] - 2026-07-11
 
 ### Added
@@ -13,8 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configuration subcommands `set` and `get` with `--global`, `--local`, and `--repo` scope flags.
 - Dual-cascading config engine distinguishing general settings (Repository -> Local -> Global) from API credentials (Env Variables -> Global -> Local -> Repository).
 - Core development guidelines, Prettier formatting (`npm run format`), and local commit testing (`npm run commit`) documented in the new `CONTRIBUTING.md`.
-- Dedicated `Usage` guide covering CLI flags and local project script configurations (`npm`/`pnpm`).
-- Expanded `Installation` guide covering global and local project-level installations.
 
 ### Changed
 - Overhauled the landing page, documentation site, and CLI metadata to be provider-agnostic.
