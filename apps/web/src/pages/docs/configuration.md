@@ -2,7 +2,7 @@
 layout: ../../layouts/DocsLayout.astro
 title: Configuration
 description: Configuration
-seoDescription: Configure Git-AIC API keys, active providers, models, cascading configuration scopes, and commands.
+seoDescription: Learn how to set API keys, choose active AI providers, select models, and manage configuration scopes.
 ---
 
 # Configuration

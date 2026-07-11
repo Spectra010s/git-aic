@@ -2,29 +2,50 @@
 layout: ../../layouts/DocsLayout.astro
 title: Installation
 description: Installation
-seoDescription: Install Git-AIC globally with npm and confirm the CLI is available in your terminal.
+seoDescription: Install Git-AIC globally or locally in your project as a devDependency using npm or pnpm.
 ---
 
 # Installation
 
-Install Git-AIC globally with npm:
+Install Git-AIC globally or locally in your project using your package manager.
 
+## 1. Global Installation
+
+Install Git-AIC globally so it is available in any repository on your machine:
+
+### Using npm:
 ```bash
-npm i -g git-aic
+npm install -g git-aic
 ```
 
-Confirm the CLI is available:
+### Using pnpm:
+```bash
+pnpm add -g git-aic
+```
 
+---
+
+## 2. Local Installation (Per Project)
+
+If you prefer to lock the version specifically for a project or share it with your team, install it as a development dependency:
+
+### Using npm:
+```bash
+npm install --save-dev git-aic
+```
+
+### Using pnpm:
+```bash
+pnpm add --save-dev git-aic
+```
+
+---
+
+## 3. Next Steps
+
+After installation, verify that the CLI is available:
 ```bash
 git aic --help
 ```
 
-Git-AIC is a terminal tool that generates commit messages from your staged diff using your choice of AI provider.
-
-Typical flow:
-
-1. stage your changes
-2. run `git aic`
-3. review the generated message
-4. accept, retry, reject, or edit
-5. let Git-AIC commit for you
+For instructions on configuring scripts and running the tool with npm or pnpm, see the [Usage Guide](/docs/usage).

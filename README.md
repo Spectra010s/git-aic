@@ -15,7 +15,7 @@ Your workflow. Your control.
 - **AI-Powered Message Generation**  
   Uses Google Gemini or OpenAI API to generate commit messages from your Git diff.
 
-- **Self-Hosted & On-Demand**  
+- **Local & On-Demand**  
   Runs locally in your terminal. No background processes. No editor lock-in.
 
 - **Full Control Over Rules**  
@@ -202,25 +202,15 @@ For detailed usage instructions on editing, resetting, and sharing prompts, see 
 | Simple-Git           | Git integration        |
 | Gemini & OpenAI APIs | LLM text generation    |
 
-## Final Takeaway
+## Core Design
 
-Automating repetitive tasks like **commit messages** saves time — but the real win here is ownership.
+git-aic is built to give you complete control over your commit automation:
 
-git-aic:
-
-- **Self-hosted** — runs entirely on your machine
-- **On-demand** — only runs when you call it
-- **Fully customizable** — prompts, commit format, workflow
-- **Under your control** — you decide every step
-
-It runs when you need it, follows your rules, and generates commits the way **you** want.
-
-_Choose your model. Define your prompt. Control the format. Extend or optimize anytime._
-
-Instead of adapting to someone else's defaults, _you built a system tailored to your workflow._
-
-You are not just using AI tools.  
-You are **building them to fit your process.**
+- **Local & Direct** — Runs entirely in your terminal; no middleman servers between you and the AI providers.
+- **On-Demand** — Only runs when you invoke it, staying out of your workflow otherwise.
+- **Customizable** — Define your own prompt rules, models, and formatting style.
+- **Team Collaboration** — Share custom commit conventions with your team by committing a `git-aic.config.json` to your repository.
+- **Interactive** — Accept, edit, retry, or reject generated messages before committing.
 
 ## License
 

@@ -19,8 +19,9 @@ export const navItems = [
 ];
 
 export const docsNavItems = [
-  { label: 'Overview', href: '/docs' },
+  { label: 'Getting Started', href: '/docs' },
   { label: 'Installation', href: '/docs/installation' },
+  { label: 'Usage', href: '/docs/usage' },
   { label: 'Configuration', href: '/docs/configuration' },
   { label: 'Prompts', href: '/docs/prompts' },
   { label: 'Troubleshooting', href: '/docs/troubleshooting' },
