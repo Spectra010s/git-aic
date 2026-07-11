@@ -13,7 +13,7 @@ export function Hero() {
             AI-Generated Git Commits.
           </h1>
           <p className="text-ink-muted text-lg max-w-[28rem] leading-relaxed">
-            Stop wasting mental energy on commit messages. Generate professional, semantic commits from your staged diffs in seconds.
+            Stop wasting mental energy on commit messages. Generate professional, semantic commits using your preferred AI provider in seconds.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <a

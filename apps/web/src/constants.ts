@@ -7,7 +7,7 @@ export const COMMANDS = {
     local: "git aic prompt edit --local",
     repo: "git aic prompt edit --repo",
   },
-  config: "git aic config --key <key>",
+  config: "git aic config",
   push: "git aic --push",
 };
 
@@ -30,6 +30,10 @@ export const FEATURES = [
   {
     title: "Bring Your Own Rules",
     body: "Define prompt rules globally, privately per-repository, or in a shared repository config. Enforce conventional commits, specific casing, or team standards locally.",
+  },
+  {
+    title: "Multi-Provider Support",
+    body: "Supports multiple AI providers out of the box. Easily switch active providers and models in seconds using the CLI setup wizard.",
   },
   {
     title: "Terminal Native",

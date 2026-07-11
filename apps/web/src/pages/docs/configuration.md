@@ -2,50 +2,116 @@
 layout: ../../layouts/DocsLayout.astro
 title: Configuration
 description: Configuration
-seoDescription: Configure Git-AIC API keys, environment variables, shared repository config, and basic commit commands.
+seoDescription: Configure Git-AIC API keys, active providers, models, cascading configuration scopes, and commands.
 ---
 
 # Configuration
 
-## API Key
+Git-AIC supports multiple AI providers (Google Gemini and OpenAI), custom model names, and hierarchical cascading configuration scopes.
 
-Git-AIC needs a Gemini API key.
+## Interactive Configuration
 
-Save it with:
-
-```bash
-git aic config --key <your_api_key>
-```
-
-Show the saved key in masked form:
+Run the base config command to view your current active settings and launch the interactive setup wizard:
 
 ```bash
 git aic config
 ```
 
-Show the full saved key:
+---
+
+## Configuration Scopes
+
+When reading and writing configurations, Git-AIC supports three scopes:
+* `--global` (default): Configures settings globally in `~/.config/git-aic/config.json`.
+* `--local`: Configures settings locally in your current Git repository config (`.git/config`).
+* `--repo`: Configures settings repository-wide in `git-aic.config.json` at the root of the repository (can be committed to Git).
+
+---
+
+## Setting Config Values
+
+You can set configuration keys specifically using the `set` subcommand:
 
 ```bash
-git aic config --show
+git aic config set <key> <value> [--global|--repo|--local]
 ```
 
-You can also use an environment variable:
+### Supported Keys:
+* `provider`: The active provider (`gemini` or `openai`).
+* `model`: The active model name (e.g., `gemini-2.5-flash`, `gpt-4o-mini`).
+* `gemini-key`: Your Google Gemini API Key.
+* `openai-key`: Your OpenAI API Key.
+* `prompt`: A custom system instruction prompt.
+
+### Examples:
+```bash
+# Set OpenAI as the active provider globally
+git aic config set provider openai
+
+# Set a custom model specifically for the current repository
+git aic config set model gemini-1.5-pro --local
+```
+
+---
+
+## Reading Config Values
+
+To read the raw, unmasked value of any configuration key (including API keys), use the `get` subcommand:
 
 ```bash
-export GEMINI_COMMIT_MESSAGE_API_KEY=your_api_key_here
+git aic config get <key> [--global|--repo|--local]
 ```
 
-The saved config is used first. The environment variable works as fallback.
+### Examples:
+```bash
+# Get the active model resolved from the cascade
+git aic config get model
+
+# Read your Gemini API key from the global scope
+git aic config get gemini-key --global
+```
+
+---
+
+## Cascading Resolution Rules
+
+When retrieving configuration values, Git-AIC resolves them using different cascades depending on the type of key to prioritize team defaults for configurations and security for keys.
+
+### 1. General Config Cascade (provider, model)
+Repository settings override local clones, which override global user preferences:
+1. **Repository Config** (`git-aic.config.json` at the repository root).
+2. **Local Git Config** (`.git/config`).
+3. **Global Config** (`~/.config/git-aic/config.json`).
+
+### 2. API Credentials Cascade (gemini-key, openai-key)
+Environment variables take absolute precedence, followed by global settings, local overrides, and repository-wide configs:
+1. **Environment Variables** (`GEMINI_COMMIT_MESSAGE_API_KEY` or `OPENAI_API_KEY`).
+2. **Global Config** (`~/.config/git-aic/config.json`).
+3. **Local Git Config** (`.git/config`).
+4. **Repository Config** (`git-aic.config.json` — *avoid storing keys here*).
+
+---
+
+## Prompt Resolution Order
+
+When resolving the system prompt instruction for generating commits, Git-AIC follows this order:
+
+1. **Shared repository prompt** from `git-aic.config.json` (if committed at repo root).
+2. **Private local prompt** from your local Git config (`.git/config`).
+3. **Global prompt** from your global Git-AIC configuration (`~/.config/git-aic/config.json`).
+4. **Built-in default prompt**.
+
+---
 
 ## Shared Repository Config
 
-Create a repository config file for team-wide prompt rules:
+Create a shared repository config file for team-wide prompt rules:
 
 ```bash
 git aic init
 ```
 
-This creates `git-aic.config.json` at the repository root:
+This creates a `git-aic.config.json` file at the repository root:
 
 ```json
 {
@@ -53,16 +119,9 @@ This creates `git-aic.config.json` at the repository root:
 }
 ```
 
-Commit this file when a team should share the same commit-generation rules.
+> **Warning:** Never commit API keys or private credentials into `git-aic.config.json`.
 
-Do not store API keys or secrets in `git-aic.config.json`.
-
-Prompt resolution order:
-
-1. shared repository prompt from `git-aic.config.json`
-2. private local prompt from Git config
-3. global prompt from Git-AIC config
-4. built-in default prompt
+---
 
 ## Basic Commands
 

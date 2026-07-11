@@ -12,7 +12,7 @@ Confirm the CLI is available:
 git aic --help
 ```
 
-Git-AIC is a terminal tool that generates commit messages from your staged diff using Google Gemini.
+Git-AIC is a terminal tool that generates commit messages from your staged diff using your choice of AI provider.
 
 Typical flow:
 

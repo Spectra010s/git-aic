@@ -13,7 +13,7 @@ Your workflow. Your control.
 ## Features
 
 - **AI-Powered Message Generation**  
-  Uses Google Gemini API to generate commit messages from your Git diff.
+  Uses Google Gemini or OpenAI API to generate commit messages from your Git diff.
 
 - **Self-Hosted & On-Demand**  
   Runs locally in your terminal. No background processes. No editor lock-in.
@@ -41,9 +41,7 @@ Your workflow. Your control.
   Use `-p` or `--push` to push after committing.
 
 - **Config Management**  
-  Set your Gemini API key or view your config:
-  - `git aic config --key <key>`
-  - `git aic config`
+  Set active provider, custom models, and API keys via the interactive setup wizard.
 
 - **TypeScript & Type Safety**  
   Built with TypeScript for maintainability and reliability.
@@ -111,47 +109,39 @@ npm run build
 
 ## Configuration
 
-### Set API Key (Primary)
+Git-AIC supports multiple AI providers (Google Gemini and OpenAI), custom model names, and cascading configuration scopes.
 
-Use the CLI config command to save your Google Gemini API key:
+### 1. Interactive Config Wizard
 
-```bash
-git aic config --key <your_api_key>
-```
-
-To view your current config:
+To view your current active configuration and run the interactive setup wizard, simply execute:
 
 ```bash
 git aic config
 ```
 
-> **Note:** It is masked by default for security reasons.
+### 2. Manual Commands & Scopes
 
-To view the full saved API key:
-
-```bash
-git aic config --show
-```
-
-### Environment Variable (Fallback)
-
-If you prefer not to use the config system, you can set it manually in your environment:
-
-- **macOS / Linux:**
+You can get and set individual configuration values directly using the `set` and `get` subcommands:
 
 ```bash
-export GEMINI_COMMIT_MESSAGE_API_KEY=your_api_key_here
+# Set active provider
+git aic config set provider openai
+
+# Set a custom model specifically for the current repository
+git aic config set model gemini-1.5-pro --local
+
+# Get the raw value of a key
+git aic config get gemini-key
 ```
 
-- **Windows (PowerShell):**
+Supported scope flags are: `--global` (default), `--local` (repository `.git/config`), or `--repo` (`git-aic.config.json` at repository root).
 
-```powershell
-setx GEMINI_COMMIT_MESSAGE_API_KEY "your_api_key_here"
-```
+### 3. Environment Variables (Fallback)
 
-After setting the variable, restart your terminal.
+If you prefer environment variables, they take absolute precedence over config files for API keys:
 
-> **Note:** This method works, but using the CLI config is safer and easier for long-term usage.
+* **Gemini API Key**: `export GEMINI_COMMIT_MESSAGE_API_KEY=your_key`
+* **OpenAI API Key**: `export OPENAI_API_KEY=your_key`
 
 ## Usage
 
@@ -181,119 +171,18 @@ git aic -p
 
 - Pushes automatically after committing.
 
-### Configure API Key
-
-```bash
-git aic config --key <key>
-```
-
-- Saves your Google Gemini API key.
-
-```bash
-git aic config
-```
-
-- Displays your saved config.
-
 ### Manage Prompts
 
-Create a shared repository config:
+Git-AIC allows you to customize the system prompt rules globally, repository-wide, or locally per-clone.
 
-```bash
-git aic init
-```
-
-This creates `git-aic.config.json`, which can be committed for team-wide prompt rules.
-
-Edit the global prompt:
-
-```bash
-git aic prompt edit
-```
-
-Set the global prompt directly from text:
-
-```bash
-git aic prompt edit --text "Write concise conventional commits with a short body when needed."
-```
-
-Load the global prompt from a file:
-
-```bash
-git aic prompt edit --file ./prompt.txt
-```
-
-Reset the global prompt:
-
-```bash
-git aic prompt reset
-```
-
-Edit a repository-local prompt:
-
-```bash
-git aic prompt edit --local
-```
-
-This saves a private prompt in Git config for your current clone only.
-
-Set a repository-local prompt from text:
-
-```bash
-git aic prompt edit --local --text "Use a short subject and a clear explanatory body."
-```
-
-Load a repository-local prompt from a file:
-
-```bash
-git aic prompt edit --local --file ./commit-prompt.txt
-```
-
-Reset the local prompt:
-
-```bash
-git aic prompt reset --local
-```
-
-Edit a shared repository prompt:
-
-```bash
-git aic prompt edit --repo
-```
-
-This saves a committed team prompt in `git-aic.config.json`.
-
-Set a shared repository prompt from text:
-
-```bash
-git aic prompt edit --repo --text "Use Conventional Commits format: <type>(<scope>): <description>. Keep the subject under 72 characters. Use scopes that match the changed package, module, or feature area. Write clear imperative summaries without trailing punctuation. Include a short body with bullet points only when the change is complex. Do not include explanations outside the commit message."
-```
-
-Load a shared repository prompt from a file:
-
-```bash
-git aic prompt edit --repo --file ./commit-prompt.txt
-```
-
-Reset the shared repository prompt:
-
-```bash
-git aic prompt reset --repo
-```
-
-Prompt resolution order:
-
-1. shared repository prompt from `git-aic.config.json`
-2. private local prompt from Git config
-3. global prompt from Git-AIC config
-4. built-in default prompt
+For detailed usage instructions on editing, resetting, and sharing prompts, see the [Prompts Guide](docs/prompts.md).
 
 ## How It Works
 
 1. Captures your staged Git diff
 2. Builds a strict system prompt
 3. Resolves the active prompt from local, repo, global, or default settings
-4. Sends the prompt and diff to Gemini
+4. Sends the prompt and diff to the active AI provider (Gemini or OpenAI)
 5. Prompts for commit confirmation (accept, edit, retry, reject)
 6. Opens your editor when you choose to edit the generated message
 7. Executes `git commit` automatically
@@ -303,15 +192,15 @@ Prompt resolution order:
 
 ## Technologies Used
 
-| Technology        | Purpose                |
-| ----------------- | ---------------------- |
-| TypeScript        | Core language          |
-| Node.js           | Runtime                |
-| Axios             | HTTP client            |
-| Chalk             | Styled terminal output |
-| Commander.js      | CLI framework          |
-| Simple-Git        | Git integration        |
-| Google Gemini API | LLM text generation    |
+| Technology           | Purpose                |
+| -------------------- | ---------------------- |
+| TypeScript           | Core language          |
+| Node.js              | Runtime                |
+| Axios                | HTTP client            |
+| Chalk                | Styled terminal output |
+| Commander.js         | CLI framework          |
+| Simple-Git           | Git integration        |
+| Gemini & OpenAI APIs | LLM text generation    |
 
 ## Final Takeaway
 
