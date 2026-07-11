@@ -2,7 +2,7 @@ const siteUrl = "https://git-aic.pages.dev";
 const creator = {
   "@type": "Person",
   name: "Spectra010s",
-  url: "https://spectra010s.vercel.app",
+  url: "https://spectra010s.biuld.app",
   image: {
     "@type": "ImageObject",
     url: "https://mycampuslib.vercel.app/spectra010s.jpg",
@@ -55,7 +55,7 @@ export const createHomeSchema = () =>
       downloadUrl: "https://www.npmjs.com/package/git-aic",
       sameAs: [
         "https://github.com/Spectra010s/git-aic",
-        "https://spectra010s.vercel.app",
+        "https://spectra010s.biuld.app",
       ],
     },
     {
