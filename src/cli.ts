@@ -81,7 +81,7 @@ program
 
 const configCmd = program
   .command("config")
-  .description("Configure the API settings")
+  .description("Configure settings interactively or manage config values")
   .option("-k, --key <key>", "Set API Key for the active provider")
   .option("--gemini-key <key>", "Set your Gemini API Key")
   .option("--openai-key <key>", "Set your OpenAI API Key")
@@ -255,10 +255,10 @@ configCmd
     } else if (k === "model") {
       await saveConfigValue("model", value, scope);
       console.log(chalk.green(`Model set to ${value} successfully!`));
-    } else if (k === "gemini-key" || k === "apikey") {
+    } else if (k === "gemini-key") {
       await saveConfigValue("apiKey", value, scope);
       console.log(chalk.green(`Gemini API Key saved successfully!`));
-    } else if (k === "openai-key" || k === "openaiapikey") {
+    } else if (k === "openai-key") {
       await saveConfigValue("openaiApiKey", value, scope);
       console.log(chalk.green(`OpenAI API Key saved successfully!`));
     } else if (k === "prompt") {
@@ -296,11 +296,11 @@ configCmd
       val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
         ? await getConfigValueAtScope("model", scope)
         : await getResolvedConfigValue("model");
-    } else if (k === "gemini-key" || k === "apikey") {
+    } else if (k === "gemini-key") {
       val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
         ? await getConfigValueAtScope("apiKey", scope)
         : await getResolvedConfigValue("apiKey");
-    } else if (k === "openai-key" || k === "openaiapikey") {
+    } else if (k === "openai-key") {
       val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
         ? await getConfigValueAtScope("openaiApiKey", scope)
         : await getResolvedConfigValue("openaiApiKey");
