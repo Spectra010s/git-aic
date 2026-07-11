@@ -1,11 +1,11 @@
-import { spawnSync } from "child_process";
-import fs from "fs/promises";
-import os from "os";
-import path from "path";
+import { spawnSync } from 'child_process';
+import fs from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 function splitCommand(command: string): string[] {
   const parts: string[] = [];
-  let current = "";
+  let current = '';
   let quote: '"' | "'" | null = null;
   let escaping = false;
 
@@ -16,7 +16,7 @@ function splitCommand(command: string): string[] {
       continue;
     }
 
-    if (char === "\\") {
+    if (char === '\\') {
       escaping = true;
       continue;
     }
@@ -38,7 +38,7 @@ function splitCommand(command: string): string[] {
     if (/\s/.test(char)) {
       if (current) {
         parts.push(current);
-        current = "";
+        current = '';
       }
       continue;
     }
@@ -47,7 +47,7 @@ function splitCommand(command: string): string[] {
   }
 
   if (escaping || quote) {
-    throw new Error("Editor command has invalid quoting.");
+    throw new Error('Editor command has invalid quoting.');
   }
 
   if (current) {
@@ -58,24 +58,20 @@ function splitCommand(command: string): string[] {
 }
 
 export function openInEditor(filePath: string) {
-  const editor = process.env.VISUAL || process.env.EDITOR || "editor";
+  const editor = process.env.VISUAL || process.env.EDITOR || 'editor';
   const [editorCommand, ...editorArgs] = splitCommand(editor);
 
   if (!editorCommand) {
-    throw new Error(
-      "No editor found. Set VISUAL or EDITOR, or install an `editor` command.",
-    );
+    throw new Error('No editor found. Set VISUAL or EDITOR, or install an `editor` command.');
   }
 
   const result = spawnSync(editorCommand, [...editorArgs, filePath], {
-    stdio: "inherit",
+    stdio: 'inherit',
   });
 
   if (result.error) {
-    if ("code" in result.error && result.error.code === "ENOENT") {
-      throw new Error(
-        "No editor found. Set VISUAL or EDITOR, or install an `editor` command.",
-      );
+    if ('code' in result.error && result.error.code === 'ENOENT') {
+      throw new Error('No editor found. Set VISUAL or EDITOR, or install an `editor` command.');
     }
 
     throw result.error;
@@ -88,21 +84,21 @@ export function openInEditor(filePath: string) {
 
 export async function editTextInEditor(
   initialText: string,
-  prefix = "git-aic-",
-  fileName = "message.txt",
+  prefix = 'git-aic-',
+  fileName = 'message.txt'
 ): Promise<string> {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
   const tempFile = path.join(tempDir, fileName);
 
   try {
-    await fs.writeFile(tempFile, `${initialText}\n`, "utf-8");
+    await fs.writeFile(tempFile, `${initialText}\n`, 'utf-8');
     openInEditor(tempFile);
-    return (await fs.readFile(tempFile, "utf-8")).trim();
+    return (await fs.readFile(tempFile, 'utf-8')).trim();
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
 }
 
 export async function editPromptInEditor(initialPrompt: string): Promise<string> {
-  return editTextInEditor(initialPrompt, "git-aic-prompt-", "prompt.txt");
+  return editTextInEditor(initialPrompt, 'git-aic-prompt-', 'prompt.txt');
 }

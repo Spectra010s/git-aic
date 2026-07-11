@@ -64,11 +64,11 @@ git-aic/
 
 ## Scripts
 
-| Script             | Description                              |
-| ------------------ | ---------------------------------------- |
-| `npm run build`    | Compile TypeScript to `dist/`            |
-| `npm run format`   | Format all files with Prettier           |
-| `npm run commit`   | Generate an AI commit message via git-aic |
+| Script           | Description                               |
+| ---------------- | ----------------------------------------- |
+| `npm run build`  | Compile TypeScript to `dist/`             |
+| `npm run format` | Format all files with Prettier            |
+| `npm run commit` | Generate an AI commit message via git-aic |
 
 ## Code Style
 

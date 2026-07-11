@@ -1,5 +1,5 @@
-import { COMMANDS } from "../constants";
-import { CopyButton } from "./CopyButton";
+import { COMMANDS } from '../constants';
+import { CopyButton } from './CopyButton';
 
 export function Hero() {
   return (
@@ -9,11 +9,10 @@ export function Hero() {
           <p className="font-mono text-sm text-ink-muted uppercase tracking-wider">
             Git CLI Extension
           </p>
-          <h1 className="max-w-[12ch] md:max-w-none">
-            AI-Generated Git Commits.
-          </h1>
+          <h1 className="max-w-[12ch] md:max-w-none">AI-Generated Git Commits.</h1>
           <p className="text-ink-muted text-lg max-w-[28rem] leading-relaxed">
-            Stop wasting mental energy on commit messages. Generate professional, semantic commits using your preferred AI provider in seconds.
+            Stop wasting mental energy on commit messages. Generate professional, semantic commits
+            using your preferred AI provider in seconds.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
             <a
@@ -42,14 +41,22 @@ export function Hero() {
               <p className="text-ink-muted mb-4 uppercase tracking-widest text-xs">Quick Install</p>
               <div className="flex items-center justify-between gap-4 mb-6">
                 <p className="text-ink">$ {COMMANDS.install}</p>
-                <CopyButton text={COMMANDS.install} className="opacity-100 md:opacity-0 md:group-hover:opacity-100" />
+                <CopyButton
+                  text={COMMANDS.install}
+                  className="opacity-100 md:opacity-0 md:group-hover:opacity-100"
+                />
               </div>
-              
+
               <div className="space-y-1">
                 <p className="opacity-50">$ {COMMANDS.basic}</p>
                 <p className="text-ink-muted italic">Analyzing staged changes...</p>
-                <p className="text-ink font-medium text-emerald-800">Proposed: "feat(core): extract layout components"</p>
-                <p className="text-ink-muted">Confirm commit? [y/n/r/e]: <span className="animate-pulse inline-block w-2 bg-ink h-4 align-middle" /></p>
+                <p className="text-ink font-medium text-emerald-800">
+                  Proposed: "feat(core): extract layout components"
+                </p>
+                <p className="text-ink-muted">
+                  Confirm commit? [y/n/r/e]:{' '}
+                  <span className="animate-pulse inline-block w-2 bg-ink h-4 align-middle" />
+                </p>
               </div>
             </div>
           </div>

@@ -1,7 +1,0 @@
-apps
-src/
-node_modules
-tsconfig.json
-docs
-.vercel
-git-aic.config.json

@@ -1,14 +1,14 @@
-import { simpleGit } from "simple-git";
-import type { SimpleGit } from "simple-git";
+import { simpleGit } from 'simple-git';
+import type { SimpleGit } from 'simple-git';
 
 const git: SimpleGit = simpleGit();
-const LOCAL_PROMPT_KEY = "aic.prompt";
-const REPO_ROOT_ARGS = ["rev-parse", "--show-toplevel"] as const;
+const LOCAL_PROMPT_KEY = 'aic.prompt';
+const REPO_ROOT_ARGS = ['rev-parse', '--show-toplevel'] as const;
 
 export async function isInsideGitRepo(): Promise<boolean> {
   try {
-    const result = await git.raw(["rev-parse", "--is-inside-work-tree"]);
-    return result.trim() === "true";
+    const result = await git.raw(['rev-parse', '--is-inside-work-tree']);
+    return result.trim() === 'true';
   } catch {
     return false;
   }
@@ -16,7 +16,7 @@ export async function isInsideGitRepo(): Promise<boolean> {
 
 export async function ensureInsideGitRepo() {
   if (!(await isInsideGitRepo())) {
-    throw new Error("Not inside a Git repository.");
+    throw new Error('Not inside a Git repository.');
   }
 }
 
@@ -27,24 +27,24 @@ export async function getRepoRoot(): Promise<string> {
 
 export const getGitDiff = async () => {
   try {
-    await git.raw(["config", "core.autocrlf", "true"]);
-    let diff = await git.diff(["--cached", "--ignore-space-at-eol"]);
+    await git.raw(['config', 'core.autocrlf', 'true']);
+    let diff = await git.diff(['--cached', '--ignore-space-at-eol']);
     if (!diff) {
-      console.log("No staged changes detected. Auto-staging all files...");
-      await git.add(".");
-      diff = await git.diff(["--cached", "--ignore-space-at-eol"]);
-      if (!diff) return "";
+      console.log('No staged changes detected. Auto-staging all files...');
+      await git.add('.');
+      diff = await git.diff(['--cached', '--ignore-space-at-eol']);
+      if (!diff) return '';
     }
     return diff;
   } catch (error) {
     console.error(error);
-    return "";
+    return '';
   }
 };
 
 export async function getLocalPrompt(): Promise<string | undefined> {
   try {
-    const prompt = await git.raw(["config", "--local", "--get", LOCAL_PROMPT_KEY]);
+    const prompt = await git.raw(['config', '--local', '--get', LOCAL_PROMPT_KEY]);
     const trimmed = prompt.trim();
     return trimmed || undefined;
   } catch {
@@ -53,12 +53,12 @@ export async function getLocalPrompt(): Promise<string | undefined> {
 }
 
 export async function setLocalPrompt(prompt: string) {
-  await git.raw(["config", "--local", LOCAL_PROMPT_KEY, prompt]);
+  await git.raw(['config', '--local', LOCAL_PROMPT_KEY, prompt]);
 }
 
 export async function resetLocalPrompt() {
   try {
-    await git.raw(["config", "--local", "--unset", LOCAL_PROMPT_KEY]);
+    await git.raw(['config', '--local', '--unset', LOCAL_PROMPT_KEY]);
   } catch {
     return;
   }
