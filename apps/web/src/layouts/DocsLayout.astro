@@ -192,4 +192,112 @@ const schema = createDocsSchema({
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
+
+  .docs-content pre {
+    position: relative;
+  }
+
+  .copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+  }
+
+  .docs-content pre:hover .copy-button {
+    opacity: 1;
+  }
+
+  .copy-button:hover {
+    background: var(--border-strong);
+    color: var(--text-primary);
+  }
+
+  .copy-button.copied {
+    color: #10b981;
+    border-color: #10b981;
+  }
+
+  .code-lang-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    opacity: 0.4;
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.05em;
+  }
 </style>
+
+<script>
+  // Find all pre elements in documentation content
+  const codeBlocks = document.querySelectorAll('.docs-content pre');
+  codeBlocks.forEach((block) => {
+    // Skip if already has button
+    if (block.querySelector('.copy-button')) return;
+
+    // Add language label if data-language exists
+    const lang = block.getAttribute('data-language');
+    if (lang) {
+      const label = document.createElement('div');
+      label.className = 'code-lang-label';
+      label.innerText = lang;
+      block.appendChild(label);
+    }
+
+    const button = document.createElement('button');
+    button.className = 'copy-button';
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Copy code');
+    button.title = 'Copy code';
+
+    // SVG Icons (Copy and Success)
+    button.innerHTML = `
+      <svg class="copy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+      </svg>
+      <svg class="success-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16" style="display: none;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    `;
+
+    block.appendChild(button);
+
+    button.addEventListener('click', async () => {
+      const codeElement = block.querySelector('code');
+      if (!codeElement) return;
+
+      const codeText = codeElement.innerText;
+      await navigator.clipboard.writeText(codeText);
+
+      const copyIcon = button.querySelector('.copy-icon') as HTMLElement;
+      const successIcon = button.querySelector('.success-icon') as HTMLElement;
+
+      copyIcon.style.display = 'none';
+      successIcon.style.display = 'block';
+      button.classList.add('copied');
+
+      setTimeout(() => {
+        copyIcon.style.display = 'block';
+        successIcon.style.display = 'none';
+        button.classList.remove('copied');
+      }, 2000);
+    });
+  });
+</script>
