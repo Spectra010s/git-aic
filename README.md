@@ -1,8 +1,8 @@
-# Git Aic
+# Git-AIC
 
-**git-aic** is a command-line interface (CLI) tool built in TypeScript that upgrades your Git workflow by automatically generating high-quality, conventional commit messages.
+**git-aic** is an AI-powered command-line interface (CLI) tool that upgrades your Git workflow by automatically generating high-quality, conventional commit messages.
 
-Powered by Google Gemini, it analyzes your staged code changes and produces concise, descriptive, and standard-compliant commit messages, helping you maintain a clean and consistent Git history.
+It analyzes your staged code changes and produces concise, descriptive, and standard-compliant commit messages, helping you maintain a clean and consistent Git history.
 
 You define the rules.  
 You customize the system prompt.  
