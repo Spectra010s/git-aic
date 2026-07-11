@@ -18,6 +18,8 @@ import {
 import { generateCommitMessage } from "./llm.js";
 import { getUserConfirmation } from "./confirm.js";
 import { editPromptInEditor } from "./editor.js";
+import readline from "node:readline";
+import readlinePromises from "node:readline/promises";
 import {
   REPO_CONFIG_FILE,
   getConfig,
@@ -26,11 +28,19 @@ import {
   initRepoConfig,
   resetCustomPrompt,
   resetRepoPrompt,
-  setApiKey,
   setCustomPrompt,
   setRepoPrompt,
-} from "./config.js";
+  getScope,
+  saveConfigValue,
+  getResolvedConfigValue,
+  getConfigValueAtScope,
+  setApiKey,
+  setOpenaiApiKey,
+  setProvider,
+  setModel,
+} from "./config/index.js";
 import { DEFAULT_SYSTEM_PROMPT } from "./prompt.js";
+import { selectPrompt } from "./select.js";
 
 process.on("SIGINT", () => {
   process.exit(0);
@@ -69,30 +79,248 @@ program
     }
   });
 
-program
+const configCmd = program
   .command("config")
-  .description("Configure the Gemini API Key settings")
-  .option("-k, --key <key>", "Set your Gemini API Key")
-  .option("--show", "Show the full API key")
-  .action(async (options) => {
-    const cfg = await getConfig();
+  .description("Configure the API settings")
+  .option("-k, --key <key>", "Set API Key for the active provider")
+  .option("--gemini-key <key>", "Set your Gemini API Key")
+  .option("--openai-key <key>", "Set your OpenAI API Key")
+  .option("-p, --provider <provider>", "Set the active AI provider (gemini or openai)")
+  .option("-m, --model <model>", "Set the active model name")
+  .option("--global", "Use global config (default)")
+  .option("--repo", "Use git-aic.config.json inside the repository")
+  .option("--local", "Use local repository git config")
+  .action(async function (options: {
+    key?: string;
+    geminiKey?: string;
+    openaiKey?: string;
+    provider?: string;
+    model?: string;
+    global?: boolean;
+    repo?: boolean;
+    local?: boolean;
+  }) {
+    let changed = false;
+    const scope = getScope(options);
+
     if (options.key) {
-      await setApiKey(options.key);
-      console.log(chalk.green("API Key saved successfully!"));
-      return;
-    }
-    if (cfg.apiKey) {
-      if (options.show) {
-        console.log(chalk.green("Current API Key:"), cfg.apiKey);
+      const cfg = await getConfig();
+      const currentProvider = cfg.provider || "gemini";
+      if (currentProvider === "openai") {
+        await saveConfigValue("openaiApiKey", options.key, scope);
+        console.log(chalk.green(`OpenAI API Key saved successfully!`));
       } else {
-        const styled =
-          cfg.apiKey.slice(0, 4) +
-          chalk.dim("*".repeat(cfg.apiKey.length - 8)) +
-          cfg.apiKey.slice(-4);
-        console.log(chalk.green("Current API Key:"), styled);
+        await saveConfigValue("apiKey", options.key, scope);
+        console.log(chalk.green(`Gemini API Key saved successfully!`));
       }
+      changed = true;
+    }
+
+    if (options.geminiKey) {
+      await saveConfigValue("apiKey", options.geminiKey, scope);
+      console.log(chalk.green(`Gemini API Key saved successfully!`));
+      changed = true;
+    }
+
+    if (options.openaiKey) {
+      await saveConfigValue("openaiApiKey", options.openaiKey, scope);
+      console.log(chalk.green(`OpenAI API Key saved successfully!`));
+      changed = true;
+    }
+
+    if (options.provider) {
+      const provider = options.provider.toLowerCase();
+      if (provider !== "gemini" && provider !== "openai") {
+        console.log(chalk.red("Invalid provider. Supported providers are: gemini, openai"));
+        process.exit(1);
+      }
+      await saveConfigValue("provider", provider, scope);
+      console.log(chalk.green(`Provider set to ${provider} successfully!`));
+      changed = true;
+    }
+
+    if (options.model) {
+      await saveConfigValue("model", options.model, scope);
+      console.log(chalk.green(`Model set to ${options.model} successfully!`));
+      changed = true;
+    }
+
+    if (changed) return;
+
+    // Resolve active settings using cascade
+    const activeProvider = (await getResolvedConfigValue("provider")) || "gemini";
+    const activeModel = (await getResolvedConfigValue("model")) || (activeProvider === "gemini" ? "gemini-1.5-flash" : "gpt-4o-mini");
+
+    console.log(chalk.cyan.bold("\nGit-AIC Configuration"));
+    console.log(chalk.dim("───────────────────────────────────"));
+    console.log(`${chalk.cyan("Active Provider:")} ${activeProvider}`);
+    console.log(`${chalk.cyan("Active Model:")}    ${activeModel}`);
+
+    const maskKey = (key?: string) => {
+      if (!key) return chalk.yellow("Not set");
+      return chalk.green(key.slice(0, 4) + chalk.dim("*".repeat(Math.max(0, key.length - 8))) + key.slice(-4));
+    };
+
+    const geminiKey = await getResolvedConfigValue("apiKey");
+    const openaiKey = await getResolvedConfigValue("openaiApiKey");
+
+    console.log(`${chalk.cyan("Gemini API Key:")}  ${maskKey(geminiKey)}`);
+    console.log(`${chalk.cyan("OpenAI API Key:")}  ${maskKey(openaiKey)}`);
+    console.log("");
+
+    const askQuestion = async (query: string): Promise<string> => {
+      const rlInstance = readlinePromises.createInterface({ input: process.stdin, output: process.stdout });
+      const answer = await rlInstance.question(query);
+      rlInstance.close();
+      process.stdin.resume(); // Ensure stdin is resumed for subsequent inputs
+      return answer.trim();
+    };
+
+    // Start Interactive Wizard (default to No, press Enter to close/decline)
+    let startWizard = false;
+    const runWizard = await askQuestion(chalk.blue("Would you like to run the interactive config wizard? [y/N]: "));
+    if (runWizard.toLowerCase() === "y") {
+      startWizard = true;
+    }
+
+    if (startWizard) {
+      // 1. Select provider
+      const provider = await selectPrompt("Select active provider:", [
+        { name: "Google Gemini", value: "gemini" },
+        { name: "OpenAI", value: "openai" }
+      ]);
+
+      // 2. Select model based on provider
+      let model = "";
+      if (provider === "gemini") {
+        model = await selectPrompt("Select Gemini Model:", [
+          { name: "Gemini 2.5 Flash (Recommended)", value: "gemini-2.5-flash" },
+          { name: "Gemini 1.5 Flash", value: "gemini-1.5-flash" },
+          { name: "Gemini 1.5 Pro", value: "gemini-1.5-pro" },
+          { name: "Custom model name...", value: "custom" }
+        ]);
+      } else {
+        model = await selectPrompt("Select OpenAI Model:", [
+          { name: "GPT-4o Mini (Recommended)", value: "gpt-4o-mini" },
+          { name: "GPT-4o", value: "gpt-4o" },
+          { name: "GPT-3.5 Turbo", value: "gpt-3.5-turbo" },
+          { name: "Custom model name...", value: "custom" }
+        ]);
+      }
+
+      if (model === "custom") {
+        model = await askQuestion("Enter custom model name: ");
+      }
+
+      // 3. Ask for API Key
+      const keyPrompt = provider === "gemini" ? "Enter Gemini API Key (press Enter to skip): " : "Enter OpenAI API Key (press Enter to skip): ";
+      const key = await askQuestion(keyPrompt);
+
+      // Save all config
+      await saveConfigValue("provider", provider, scope);
+      if (model) await saveConfigValue("model", model, scope);
+      if (key) {
+        if (provider === "gemini") {
+          await saveConfigValue("apiKey", key, scope);
+        } else {
+          await saveConfigValue("openaiApiKey", key, scope);
+        }
+      }
+
+      console.log(chalk.green("\nConfiguration saved successfully!"));
+    }
+    process.exit(0);
+  });
+
+configCmd
+  .command("set <key> <value>")
+  .description("Set a configuration option (e.g. provider, model, gemini-key, openai-key, prompt)")
+  .option("--global", "Use global config (default)")
+  .option("--repo", "Use git-aic.config.json inside the repository")
+  .option("--local", "Use local repository git config")
+  .action(async function (key, value, options) {
+    const parentOpts = this.parent ? this.parent.opts() : {};
+    const mergedOpts = { ...parentOpts, ...options };
+    const scope = getScope(mergedOpts);
+
+    const k = key.toLowerCase();
+    if (k === "provider") {
+      const provider = value.toLowerCase();
+      if (provider !== "gemini" && provider !== "openai") {
+        console.error(chalk.red("Invalid provider. Supported providers are: gemini, openai"));
+        process.exit(1);
+      }
+      await saveConfigValue("provider", provider, scope);
+      console.log(chalk.green(`Provider set to ${provider} successfully!`));
+    } else if (k === "model") {
+      await saveConfigValue("model", value, scope);
+      console.log(chalk.green(`Model set to ${value} successfully!`));
+    } else if (k === "gemini-key" || k === "apikey") {
+      await saveConfigValue("apiKey", value, scope);
+      console.log(chalk.green(`Gemini API Key saved successfully!`));
+    } else if (k === "openai-key" || k === "openaiapikey") {
+      await saveConfigValue("openaiApiKey", value, scope);
+      console.log(chalk.green(`OpenAI API Key saved successfully!`));
+    } else if (k === "prompt") {
+      await saveConfigValue("prompt", value, scope);
+      console.log(chalk.green(`Custom system prompt saved successfully!`));
     } else {
-      console.log(chalk.yellow("No API key set"));
+      console.error(
+        chalk.red(
+          `Invalid configuration key: ${key}. Valid keys: provider, model, gemini-key, openai-key, prompt`
+        )
+      );
+      process.exit(1);
+    }
+  });
+
+configCmd
+  .command("get <key>")
+  .description("Get a configuration option")
+  .option("--global", "Use global config (default)")
+  .option("--repo", "Use git-aic.config.json inside the repository")
+  .option("--local", "Use local repository git config")
+  .action(async function (key, options) {
+    const parentOpts = this.parent ? this.parent.opts() : {};
+    const mergedOpts = { ...parentOpts, ...options };
+    const scope = getScope(mergedOpts);
+
+    const k = key.toLowerCase();
+    let val: string | undefined;
+
+    if (k === "provider") {
+      val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
+        ? await getConfigValueAtScope("provider", scope)
+        : await getResolvedConfigValue("provider");
+    } else if (k === "model") {
+      val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
+        ? await getConfigValueAtScope("model", scope)
+        : await getResolvedConfigValue("model");
+    } else if (k === "gemini-key" || k === "apikey") {
+      val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
+        ? await getConfigValueAtScope("apiKey", scope)
+        : await getResolvedConfigValue("apiKey");
+    } else if (k === "openai-key" || k === "openaiapikey") {
+      val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
+        ? await getConfigValueAtScope("openaiApiKey", scope)
+        : await getResolvedConfigValue("openaiApiKey");
+    } else if (k === "prompt") {
+      val = mergedOpts.global || mergedOpts.repo || mergedOpts.local
+        ? await getConfigValueAtScope("prompt", scope)
+        : await getResolvedConfigValue("prompt");
+    } else {
+      console.error(
+        chalk.red(
+          `Invalid configuration key: ${key}. Valid keys: provider, model, gemini-key, openai-key, prompt`
+        )
+      );
+      process.exit(1);
+    }
+
+    if (val === undefined) {
+      console.log(chalk.yellow("Not set"));
+    } else {
+      console.log(val);
     }
   });
 
