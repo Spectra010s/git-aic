@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
+---
+
+<BaseLayout title="404: Page Not Found | Git-AIC">
+  <div class="min-h-screen bg-page text-ink font-sans antialiased flex flex-col justify-between">
+    <Header client:load />
+
+    <main class="max-w-xl mx-auto px-4 py-24 text-center flex flex-col items-center justify-center flex-grow">
+      <div class="text-8xl font-black text-ink-muted opacity-15 select-none tracking-widest mb-4">404</div>
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-6">Lost in transit.</h1>
+      <p class="text-ink-muted leading-relaxed mb-8">
+        The page you are looking for doesn't exist, has been moved, or we committed it to a different branch.
+      </p>
+      <a
+        class="inline-block border border-ink bg-ink text-page px-6 py-3 text-sm font-medium hover:bg-transparent hover:text-ink transition-colors no-underline"
+        href="/"
+      >
+        Return Home
+      </a>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>
