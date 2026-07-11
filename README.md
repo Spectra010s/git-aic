@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="apps/web/public/favicon.png" alt="Git-AIC Logo" width="80" height="80" />
+  <img src="https://git-aic.pages.dev/favicon.png" alt="Git-AIC Logo" width="80" height="80" />
 </p>
 
 <h1 align="center">Git-AIC</h1>

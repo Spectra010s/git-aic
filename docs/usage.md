@@ -19,23 +19,45 @@ Options:
   git aic --issue 42
   ```
 
-### 2. Project Scripts (npm/pnpm)
-If installed locally as a devDependency, you can execute Git-AIC through package scripts:
+### 2. Project-Level Scripts (npm/pnpm)
 
-#### Using npm:
-Run the script defined in your `package.json`:
+If you prefer to keep the CLI scoped to a specific project and shared with your team, you can configure it locally as a development dependency.
+
+#### Step 1: Install as a Development Dependency
+Run the installation command for your package manager:
+
+##### Using npm:
+```bash
+npm install --save-dev git-aic
+```
+
+##### Using pnpm:
+```bash
+pnpm add --save-dev git-aic
+```
+
+#### Step 2: Configure your `package.json`
+Add a custom script mapping to the `scripts` object in your project's `package.json` file:
+
+```json
+{
+  "scripts": {
+    "commit": "git-aic"
+  }
+}
+```
+
+#### Step 3: Run the Commit Command
+Once configured, you can run the local script:
+
+##### Using npm:
 ```bash
 npm run commit
 ```
 
-#### Using pnpm:
-Run the script defined in your `package.json`:
+##### Using pnpm:
 ```bash
-pnpm run commit
-```
-Or directly execute the local binary:
-```bash
-pnpm git-aic
+pnpm commit
 ```
 
 ---
