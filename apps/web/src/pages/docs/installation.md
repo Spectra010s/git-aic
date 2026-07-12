@@ -14,11 +14,13 @@ Install Git-AIC globally or locally in your project using your package manager.
 Install Git-AIC globally so it is available in any repository on your machine:
 
 ### Using npm:
+
 ```bash
 npm install -g git-aic
 ```
 
 ### Using pnpm:
+
 ```bash
 pnpm add -g git-aic
 ```
@@ -30,11 +32,13 @@ pnpm add -g git-aic
 If you prefer to lock the version specifically for a project or share it with your team, install it as a development dependency:
 
 ### Using npm:
+
 ```bash
 npm install --save-dev git-aic
 ```
 
 ### Using pnpm:
+
 ```bash
 pnpm add --save-dev git-aic
 ```
@@ -44,6 +48,7 @@ pnpm add --save-dev git-aic
 ## 3. Next Steps
 
 After installation, verify that the CLI is available:
+
 ```bash
 git aic --help
 ```

@@ -20,116 +20,116 @@ This project helps developers maintain a consistent and high-quality Git commit 
 
 Git-AIC comes packed with features designed to streamline your Git workflow:
 
-*   **AI-Powered Message Generation**
-    It taps into Google Gemini or OpenAI APIs to analyze your Git diff and suggest descriptive, conventional commit messages.
+- **AI-Powered Message Generation**
+  It taps into Google Gemini or OpenAI APIs to analyze your Git diff and suggest descriptive, conventional commit messages.
 
-    ```mermaid
-    sequenceDiagram
-      actor User
-      participant CLI as "Git-AIC CLI"
-      participant Git as "Git Repository"
-      participant Config as "Config System"
-      participant LLM as "LLM Provider (Gemini/OpenAI)"
-      participant Editor as "User's Editor"
+  ```mermaid
+  sequenceDiagram
+    actor User
+    participant CLI as "Git-AIC CLI"
+    participant Git as "Git Repository"
+    participant Config as "Config System"
+    participant LLM as "LLM Provider (Gemini/OpenAI)"
+    participant Editor as "User's Editor"
 
-      User->>CLI: `git aic`
-      CLI->>Git: Get staged changes (diff)
-      Git-->>CLI: Diff content
-      CLI->>Config: Resolve active LLM provider & prompt
-      Config-->>CLI: Provider config (model, keys, prompt)
-      CLI->>LLM: Send diff and system prompt
-      LLM-->>CLI: Generated commit message
-      CLI->>User: Display proposed message (e.g., "feat(auth): add login form")
-      User->>CLI: Confirm / Edit / Retry / Reject
-      alt If User Chooses 'Edit'
-        CLI->>Editor: Open message for editing
-        Editor-->>User: (User edits message)
-        Editor-->>CLI: Edited message
-        CLI->>User: (Re-confirm edited message)
+    User->>CLI: `git aic`
+    CLI->>Git: Get staged changes (diff)
+    Git-->>CLI: Diff content
+    CLI->>Config: Resolve active LLM provider & prompt
+    Config-->>CLI: Provider config (model, keys, prompt)
+    CLI->>LLM: Send diff and system prompt
+    LLM-->>CLI: Generated commit message
+    CLI->>User: Display proposed message (e.g., "feat(auth): add login form")
+    User->>CLI: Confirm / Edit / Retry / Reject
+    alt If User Chooses 'Edit'
+      CLI->>Editor: Open message for editing
+      Editor-->>User: (User edits message)
+      Editor-->>CLI: Edited message
+      CLI->>User: (Re-confirm edited message)
+    end
+    alt If User Chooses 'Retry'
+      CLI->>LLM: Send diff and system prompt (regenerate)
+    end
+    alt If User Chooses 'Confirm'
+      CLI->>Git: Execute `git commit -m "..."`
+      opt If `--push` flag is present
+        CLI->>Git: Execute `git push`
       end
-      alt If User Chooses 'Retry'
-        CLI->>LLM: Send diff and system prompt (regenerate)
-      end
-      alt If User Chooses 'Confirm'
-        CLI->>Git: Execute `git commit -m "..."`
-        opt If `--push` flag is present
-          CLI->>Git: Execute `git push`
-        end
-        Git-->>CLI: Commit successful
-        CLI->>User: Confirmation message
-      end
-    ```
+      Git-->>CLI: Commit successful
+      CLI->>User: Confirmation message
+    end
+  ```
 
-*   **Local & On-Demand Execution**
-    It runs entirely in your terminal, only when you explicitly call it. This means no background processes, no editor lock-in, and full control over when and how it operates.
+- **Local & On-Demand Execution**
+  It runs entirely in your terminal, only when you explicitly call it. This means no background processes, no editor lock-in, and full control over when and how it operates.
 
-*   **Full Control Over Rules**
-    You can customize the system prompt to enforce your team's specific commit conventions, formatting styles, or preferred level of detail.
+- **Full Control Over Rules**
+  You can customize the system prompt to enforce your team's specific commit conventions, formatting styles, or preferred level of detail.
 
-    ```mermaid
-    sequenceDiagram
-      actor User
-      participant CLI as "Git-AIC CLI"
-      participant ConfigSys as "Configuration System"
-      participant Editor as "User's Editor"
+  ```mermaid
+  sequenceDiagram
+    actor User
+    participant CLI as "Git-AIC CLI"
+    participant ConfigSys as "Configuration System"
+    participant Editor as "User's Editor"
 
-      User->>CLI: `git aic prompt edit --global`
-      CLI->>ConfigSys: Get current global prompt
-      ConfigSys-->>CLI: Existing prompt text (or default)
-      CLI->>Editor: Open prompt.txt with prompt text
-      Editor-->>User: (User edits the prompt)
-      Editor-->>CLI: New prompt text from editor
-      CLI->>ConfigSys: Save new global prompt
-      ConfigSys-->>CLI: Confirmation of save
-      CLI->>User: "Global system prompt saved successfully!"
-    ```
+    User->>CLI: `git aic prompt edit --global`
+    CLI->>ConfigSys: Get current global prompt
+    ConfigSys-->>CLI: Existing prompt text (or default)
+    CLI->>Editor: Open prompt.txt with prompt text
+    Editor-->>User: (User edits the prompt)
+    Editor-->>CLI: New prompt text from editor
+    CLI->>ConfigSys: Save new global prompt
+    ConfigSys-->>CLI: Confirmation of save
+    CLI->>User: "Global system prompt saved successfully!"
+  ```
 
-*   **Flexible Prompt and Config Management**
-    Configure your AI provider (Gemini or OpenAI), custom models, and API keys. Settings can be managed globally, per repository, or even locally for a specific clone, with an interactive wizard for easy setup.
+- **Flexible Prompt and Config Management**
+  Configure your AI provider (Gemini or OpenAI), custom models, and API keys. Settings can be managed globally, per repository, or even locally for a specific clone, with an interactive wizard for easy setup.
 
-    ```mermaid
-    sequenceDiagram
-      actor User
-      participant CLI as "Git-AIC CLI"
-      participant ConfigSys as "Configuration System"
-      box Configuration Scopes
-        participant Global as "Global Config (user home)"
-        participant Repo as "Repository Config (git-aic.config.json)"
-        participant Local as "Local Git Config (.git/config)"
-        participant EnvVars as "Environment Variables"
-      end
+  ```mermaid
+  sequenceDiagram
+    actor User
+    participant CLI as "Git-AIC CLI"
+    participant ConfigSys as "Configuration System"
+    box Configuration Scopes
+      participant Global as "Global Config (user home)"
+      participant Repo as "Repository Config (git-aic.config.json)"
+      participant Local as "Local Git Config (.git/config)"
+      participant EnvVars as "Environment Variables"
+    end
 
-      User->>CLI: `git aic config`
-      CLI->>ConfigSys: Read all config layers (EnvVars, Local, Repo, Global)
-      ConfigSys-->>CLI: Resolved current config values
-      CLI->>User: Display current active config (provider, model, keys)
-      CLI->>User: "Run interactive config wizard? [y/N]"
-      User->>CLI: `y`
-      CLI->>User: "Select active provider:" (e.g., Gemini, OpenAI)
-      User->>CLI: User selection (e.g., `gemini`)
-      CLI->>User: "Select Gemini Model:" (e.g., 2.5 Flash, 1.5 Pro)
-      User->>CLI: User selection (e.g., `gemini-2.5-flash`)
-      CLI->>User: "Enter Gemini API Key:"
-      User->>CLI: User input (or skip)
-      CLI->>ConfigSys: Save new config values (provider, model, API key) to default scope (Global)
-      ConfigSys-->>CLI: Confirmation of save
-      CLI->>User: "Configuration saved successfully!"
-    ```
+    User->>CLI: `git aic config`
+    CLI->>ConfigSys: Read all config layers (EnvVars, Local, Repo, Global)
+    ConfigSys-->>CLI: Resolved current config values
+    CLI->>User: Display current active config (provider, model, keys)
+    CLI->>User: "Run interactive config wizard? [y/N]"
+    User->>CLI: `y`
+    CLI->>User: "Select active provider:" (e.g., Gemini, OpenAI)
+    User->>CLI: User selection (e.g., `gemini`)
+    CLI->>User: "Select Gemini Model:" (e.g., 2.5 Flash, 1.5 Pro)
+    User->>CLI: User selection (e.g., `gemini-2.5-flash`)
+    CLI->>User: "Enter Gemini API Key:"
+    User->>CLI: User input (or skip)
+    CLI->>ConfigSys: Save new config values (provider, model, API key) to default scope (Global)
+    ConfigSys-->>CLI: Confirmation of save
+    CLI->>User: "Configuration saved successfully!"
+  ```
 
-*   **Conventional Commits Compliance**
-    It strictly adheres to Conventional Commits guidelines (e.g., `feat:`, `fix:`, `refactor:`, `chore:`), helping you maintain a semantically versioned and readable commit history.
+- **Conventional Commits Compliance**
+  It strictly adheres to Conventional Commits guidelines (e.g., `feat:`, `fix:`, `refactor:`, `chore:`), helping you maintain a semantically versioned and readable commit history.
 
-*   **Commit Confirmation & Editing**
-    Before committing, you get a chance to review the generated message. You can accept it as is, open it in your editor for full control, retry generation if you're not satisfied, or simply reject the commit.
+- **Commit Confirmation & Editing**
+  Before committing, you get a chance to review the generated message. You can accept it as is, open it in your editor for full control, retry generation if you're not satisfied, or simply reject the commit.
 
-*   **Issue Linking**
-    Easily link your commits to GitHub issues using the `--issue <number>` flag.
+- **Issue Linking**
+  Easily link your commits to GitHub issues using the `--issue <number>` flag.
 
-*   **Optional Push After Commit**
-    Add `-p` or `--push` to automatically push your changes to the remote repository after a successful commit.
+- **Optional Push After Commit**
+  Add `-p` or `--push` to automatically push your changes to the remote repository after a successful commit.
 
-*   **Seamless Git Integration**
-    It integrates directly with Git as a CLI tool, making it a natural extension of your existing workflow.
+- **Seamless Git Integration**
+  It integrates directly with Git as a CLI tool, making it a natural extension of your existing workflow.
 
 ## System Architecture / Design
 
@@ -222,25 +222,26 @@ git aic config get gemini-key
 ```
 
 Supported scope flags:
-*   `--global`: (Default) Saves to your global Git-AIC config file (e.g., `~/.config/git-aic/config`).
-*   `--repo`: Saves to `git-aic.config.json` at your current repository root. This is great for sharing config with team members.
-*   `--local`: Saves to your repository's local Git config (`.git/config`).
+
+- `--global`: (Default) Saves to your global Git-AIC config file (e.g., `~/.config/git-aic/config`).
+- `--repo`: Saves to `git-aic.config.json` at your current repository root. This is great for sharing config with team members.
+- `--local`: Saves to your repository's local Git config (`.git/config`).
 
 ### 3. Environment Variables (Fallback)
 
 For sensitive API keys, environment variables take precedence over all config files. This is often preferred for CI/CD pipelines or temporary use.
 
-*   **Gemini API Key**: `export GEMINI_COMMIT_MESSAGE_API_KEY=your_key_here`
-*   **OpenAI API Key**: `export OPENAI_API_KEY=your_key_here`
+- **Gemini API Key**: `export GEMINI_COMMIT_MESSAGE_API_KEY=your_key_here`
+- **OpenAI API Key**: `export OPENAI_API_KEY=your_key_here`
 
 ## Environment Variables
 
 Git-AIC uses the following environment variables, primarily for API keys:
 
-*   `GEMINI_COMMIT_MESSAGE_API_KEY`: Your API key for Google Gemini.
-    *   Example: `export GEMINI_COMMIT_MESSAGE_API_KEY=AIzaSy...`
-*   `OPENAI_API_KEY`: Your API key for OpenAI services.
-    *   Example: `export OPENAI_API_KEY=sk-...`
+- `GEMINI_COMMIT_MESSAGE_API_KEY`: Your API key for Google Gemini.
+  - Example: `export GEMINI_COMMIT_MESSAGE_API_KEY=AIzaSy...`
+- `OPENAI_API_KEY`: Your API key for OpenAI services.
+  - Example: `export OPENAI_API_KEY=sk-...`
 
 ## Usage
 
@@ -254,9 +255,9 @@ Run this command to have Git-AIC generate a commit message based on your staged 
 git aic
 ```
 
-*   It will display a proposed commit message.
-*   You can then `y` (accept), `e` (edit in your default editor), `r` (retry generation), or `n` (reject and abort) the message.
-*   Editing supports multiline commit messages and opens your configured text editor.
+- It will display a proposed commit message.
+- You can then `y` (accept), `e` (edit in your default editor), `r` (retry generation), or `n` (reject and abort) the message.
+- Editing supports multiline commit messages and opens your configured text editor.
 
 ### Commit and Link to Issue
 
@@ -292,8 +293,6 @@ git aic prompt reset --local
 
 For more detailed instructions on editing, resetting, and sharing prompts, refer to the [Prompts Guide](docs/prompts.md) (if available).
 
-
-
 ## Contributing
 
 We welcome contributions to Git-AIC! If you're interested in making this tool even better, please consider:
@@ -317,10 +316,8 @@ This project is licensed under the [ISC License](https://github.com/Spectra010s/
 
 **Spectra010s**
 
-*   [Portfolio](https://spectra010s.biuld.app)
-*   [X (Twitter)](https://x.com/Spectra010s)
-*   [LinkedIn](https://www.linkedin.com/in/adeloye-adetayo-273723253)
-
-
+- [Portfolio](https://spectra010s.biuld.app)
+- [X (Twitter)](https://x.com/Spectra010s)
+- [LinkedIn](https://www.linkedin.com/in/adeloye-adetayo-273723253)
 
 _README was generated by [Dokugen](https://www.npmjs.com/package/dokugen)._
