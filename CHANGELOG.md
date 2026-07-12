@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Dedicated `Usage` guide covering CLI flags and local project script configurations (`npm`/`pnpm`).
 - Expanded `Installation` guide covering global and local project-level installations.
+- Custom 404 error page matching the main site layout.
+- Interactive code block copy buttons and language badges on documentation pages.
+- Standard Contributor Covenant Code of Conduct.
+
+### Changed
+- Bumped local `git-aic` devDependency in `package.json` to `v1.4.0`.
 
 ## [1.4.0] - 2026-07-11
 
