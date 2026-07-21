@@ -3,9 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
 
-## [Unreleased]
+## [1.4.1] - 2026-07-21
 
 ### Added
 
@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bumped local `git-aic` devDependency in `package.json` to `v1.4.0`.
+- Gemini provider's recommended model updated to gemini-3.5-flash (7441514)
+
+### Fixed
+- Axios vulnerability [More details](https://github.com/Spectra010s/git-aic/issues/68#issuecomment-5038424718)
 
 ## [1.4.0] - 2026-07-11
 
