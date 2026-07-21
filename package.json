@@ -43,7 +43,7 @@
     "LICENSE"
   ],
   "dependencies": {
-    "axios": "^1.13.2",
+    "axios": "1.18.1",
     "chalk": "^5.6.2",
     "commander": "^14.0.2",
     "simple-git": "^3.30.0"
