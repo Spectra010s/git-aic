@@ -201,7 +201,8 @@ const configCmd = program
       let model = '';
       if (provider === 'gemini') {
         model = await selectPrompt('Select Gemini Model:', [
-          { name: 'Gemini 2.5 Flash (Recommended)', value: 'gemini-2.5-flash' },
+          { name: 'Gemini 3.5 Flash (Recommended)', value: 'gemini-3.5-flash' },
+          { name: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash' },
           { name: 'Gemini 1.5 Flash', value: 'gemini-1.5-flash' },
           { name: 'Gemini 1.5 Pro', value: 'gemini-1.5-pro' },
           { name: 'Custom model name...', value: 'custom' },
