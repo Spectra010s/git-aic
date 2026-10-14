@@ -49,7 +49,7 @@
     "simple-git": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "^25.0.3",
+    "@types/node": "^26.6.5",
     "git-aic": "^1.4.2",
     "prettier": "^3.5.3",
     "typescript": "^5.9.3"
